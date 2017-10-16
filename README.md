@@ -7,6 +7,7 @@ Python 3.x (developed on Python 3.6.3)
 ```
 git clone https://github.com/tehw0lf/paw.git
 cd paw
+./tests.py (optional unit tests)
 ./paw.py
 ```
 
