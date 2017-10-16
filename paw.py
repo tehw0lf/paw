@@ -150,10 +150,10 @@ class paw:
         if len(arr2d) == 1:
             return arr2d[0]
         else:
-            buffer_a = arr2d[0]
+            buffer_a = sorted(set(arr2d[0]))
             #read buffer_a from arr2d (self.cset)
             for i in range(1, len(arr2d)):
-                temparr[i-1] = arr2d[i]
+                temparr[i-1] = sorted(set(arr2d[i]))
             buffer_b = self.gen_wordlist(temparr)
             buffer_c = [(i+j) for i in buffer_a for j in buffer_b]
             return buffer_c
