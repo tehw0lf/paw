@@ -259,7 +259,7 @@ class paw:
                     except KeyError:
                         self.cset[cur] = tmpsets[i]                    
         if cnt > 0:
-            print('warning: input contain uneven number of brackets')
+            print('warning: input contains uneven number of brackets')
         print(self.cset)
             
     def save_wordlist(self):
