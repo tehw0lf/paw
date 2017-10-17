@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tehw0lf/paw.svg?branch=master)](https://travis-ci.org/tehw0lf/paw)
+
 ![paw.py -h](/res/help.png)
 
 # Prerequisites
