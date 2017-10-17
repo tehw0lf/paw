@@ -8,6 +8,7 @@ class paw_test(unittest.TestCase):
         self.w1 = [["A", "B", "C"], ["1", "2", "3"]]
         self.w2 = [["A"], ["1","2","3"]]
         self.no_duplicates = [["A","A"] ,["1", "1"]]
+        self.badchar = chr(0)
 
     def test_generate_wordlist(self):
         # Set the arguments
@@ -47,6 +48,10 @@ class paw_test(unittest.TestCase):
         value= "".join(value)
         self.assertEqual(5, key)
         self.assertEqual(value, "%h%i%d%s%s")
+
+    def test_badchars(self):
+        self.paw.cset_lookup(self.badchar)
+        self.assertEqual(1, self.paw.wcount)
 
 
 if __name__ == '__main__':
