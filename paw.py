@@ -251,8 +251,12 @@ class paw:
             if self.args.hcat:
                 self.gen_hcat_cmd()
 
-        if self.wcount > 0:
-            print('done with %d warnings' % self.wcount)
+        if self.wcount > 1:
+            self.report = 'done with %d warnings' % self.wcount
+            print(self.report)
+        elif self.wcount > 0:
+            self.report = 'done with %d warning' % self.wcount
+            print(self.report)
             
     def save_wordlist(self):
         '''
