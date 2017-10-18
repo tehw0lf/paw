@@ -91,6 +91,10 @@ class paw_test(unittest.TestCase):
         self.paw.args.hcat = True
         self.paw.patterns[0] = ['%h', '%di', '%d', '%s', '%s']
         self.paw.gen_hcat_cmd()
+
+    def test_parse_cset_uneven(self):
+        self.paw.args.gensets= '[a'
+        self.paw.gen_charset()
         
 if __name__ == '__main__':
     unittest.main()
