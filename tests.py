@@ -94,6 +94,16 @@ class paw_test(unittest.TestCase):
         self.paw.parse_commands()
         words4 = self.paw.gen_wordlist(self.paw.cset)
         self.assertEqual(words4, ['11', '1B', 'B1', 'BB'])
+        
+    def test_report_wcount_one(self):
+        self.paw.wcount = 1
+        self.paw.parse_commands()
+        self.assertEqual(self.paw.report, 'done with 1 warning')
+        
+    def test_report_wcount_multi(self):
+        self.paw.wcount = 2
+        self.paw.parse_commands()
+        self.assertEqual(self.paw.report, 'done with 2 warnings')
 
     def test_flag_error_c_and_p(self):
         self.paw.args.custsets = True
