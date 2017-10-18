@@ -1,6 +1,5 @@
 import filecmp
 import unittest
-import tempfile
 from paw import paw
 
 class paw_test(unittest.TestCase):
@@ -9,6 +8,7 @@ class paw_test(unittest.TestCase):
         self.paw = paw()
         self.w1 = [["A", "B", "C"], ["1", "2", "3"]]
         self.w2 = [["A"], ["1","2","3"]]
+        self.w3 = 'a'
         self.no_duplicates = [["A","A"] ,["1", "1"]]
         self.badchar = chr(0)
         self.tfilepath = 'test_files/tmp'        
@@ -133,6 +133,11 @@ class paw_test(unittest.TestCase):
         self.paw.cset = {0: 'a'}
         self.paw.save_wordlist()
         self.assertTrue(filecmp.cmp(self.paw.args.outfile, 'test_files/test_out'))
+        
+    def test_save_wordlist_stdout(self):
+        self.paw.cset = {0: 'a'}
+        self.paw.save_wordlist()
+        self.assertEqual(self.w3, self.paw.wlist)
         
         
 if __name__ == '__main__':
