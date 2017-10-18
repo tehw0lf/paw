@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/tehw0lf/paw.svg?branch=master)](https://travis-ci.org/tehw0lf/paw)
+[![Build Status](https://travis-ci.org/tehw0lf/paw.svg?branch=master)](https://travis-ci.org/tehw0lf/paw) [![codecov](https://codecov.io/gh/tehw0lf/paw/branch/master/graph/badge.svg)](https://codecov.io/gh/tehw0lf/paw)
 
 ![paw.py -h](/res/help.png)
 
