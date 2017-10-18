@@ -194,34 +194,6 @@ class paw:
                             provided)''')
         self.args = self.parser.parse_args()
 
-        if (self.args.hcat
-            and self.args.gensets):
-                self.parser.print_help()
-                print('''\nerror: -H has to be used in combination with either
-\t-c, -g, or -p.''')
-                exit()
-        
-        if (self.args.custsets
-            or self.args.gensets):
-            if self.args.pattern:
-                self.parser.print_help()
-                print('\nerror: -c, -g, and -p can only be used alone.')
-                exit()
-            else:
-                self.gen_charset()
-                self.save_wordlist()
-                if self.args.hcat:
-                    if self.args.custsets:
-                        self.gen_hcat_cmd()
-            
-        elif self.args.pattern:
-            self.from_passwords()
-            if self.args.hcat:
-                self.gen_hcat_cmd()
-
-        if self.wcount > 0:
-            print('done with %d warnings' % self.wcount)
-
     def parse_cset(self):
         cur = 0
         cnt = 0
@@ -252,6 +224,35 @@ class paw:
         if cnt > 0:
             print('warning: input contains uneven number of brackets')
             self.wcount += 1
+        
+    def parse_commands(self):
+        if (self.args.hcat
+            and self.args.gensets):
+                self.parser.print_help()
+                print('''\nerror: -H has to be used in combination with either
+\t-c, or -p.''')
+                exit()                
+        if (self.args.custsets
+            or self.args.gensets):
+            if self.args.pattern:
+                print(self.args.gensets)
+                self.parser.print_help()
+                print('\nerror: -c, -g, and -p can only be used alone.')
+                exit()
+            else:
+                self.gen_charset()
+                self.save_wordlist()
+                if self.args.hcat:
+                    if self.args.custsets:
+                        self.gen_hcat_cmd()
+            
+        elif self.args.pattern:
+            self.from_passwords()
+            if self.args.hcat:
+                self.gen_hcat_cmd()
+
+        if self.wcount > 0:
+            print('done with %d warnings' % self.wcount)
             
     def save_wordlist(self):
         '''
@@ -272,6 +273,7 @@ class paw:
         self.patterns = {}        
         self.wcount = 0
         self.parse_args()
+        self.parse_commands()
         
 if __name__ == '__main__': # pragma: no cover
     paw()
