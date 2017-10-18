@@ -66,6 +66,11 @@ class paw_test(unittest.TestCase):
         (key, value), = self.paw.cset.items()
         self.assertEqual(value, "0123456789d")
 
+    def test_gen_hcat_cmd_one(self):
+        self.paw.args.hcat = True
+        self.paw.patterns[0] = ['%h']
+        self.paw.gen_hcat_cmd()
+        
     def test_gen_hcat_cmd_single(self):
         self.paw.args.hcat = True
         self.paw.patterns[0] = ['%h', '%i', '%d', '%s', '%s']
@@ -87,7 +92,6 @@ class paw_test(unittest.TestCase):
         self.paw.patterns[0] = ['%h', '%di', '%d', '%s', '%s']
         self.paw.gen_hcat_cmd()
         
-
 if __name__ == '__main__':
     unittest.main()
 
