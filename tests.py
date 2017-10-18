@@ -60,6 +60,13 @@ class paw_test(unittest.TestCase):
             self.paw.gen_charset()
         self.assertEqual(value.exception.code, None)
 
+    def test_parse_cset(self):
+        self.paw.args.gensets = "[%dd]"
+        self.paw.gen_charset()
+        (key, value), = self.paw.cset.items()
+        self.assertEqual(value, "0123456789d")
+        
+
 if __name__ == '__main__':
     unittest.main()
 
