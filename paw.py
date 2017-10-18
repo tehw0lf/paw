@@ -55,7 +55,7 @@ class paw:
         '''
         if self.args.custsets:  # -c
             if self.args.gensets:
-                parser.print_help()
+                self.parser.print_help()
                 print('\nerror: -c, -g, and -p can only be used alone.')
                 exit()
             else:
@@ -162,50 +162,50 @@ class paw:
         '''
         Parses input arguments and executes functions
         '''
-        parser = argparse.ArgumentParser(
+        self.parser = argparse.ArgumentParser(
             description = ''' paw - patterns and wordlists in python
                         \n standard charsets:\n %%d: {d}\n %%u: {u}
  %%l: {l}\n %%h: {h}\n %%i: {i}\n %%s: {s}
                         '''.replace('%%', '%').format(**static.csets),
             formatter_class = argparse.RawDescriptionHelpFormatter)
-        parser.add_argument('-i',
+        self.parser.add_argument('-i',
                             action='store',
                             dest='infile',
                             help=' Path to the input file')
-        parser.add_argument('-p',
+        self.parser.add_argument('-p',
                             action='store_true',
                             dest='pattern',
                             help=''' Read strings from input file,
                             generate pattern and print it
                             ''')
-        parser.add_argument('-g',
+        self.parser.add_argument('-g',
                             action='store',
                             dest='gensets',
                             help=(''' Generate wordlist with specified
                                 charsets for each position
                             ([foo][bar][baz] or [%%d%%l][%%l][%%d%%u])
                             or [fo%%d][b%%lr][%%uaz]'''))
-        parser.add_argument('-c',
+        self.parser.add_argument('-c',
                             action='store_true',
                             dest='custsets',
                             help=''' Read charsets from input file
                             (line number = string position)''')
-        parser.add_argument('-H',
+        self.parser.add_argument('-H',
                             action='store_true',
                             dest='hcat',
                             help=''' Generate hashcat command
                                 (cannot be used alone)''')
-        parser.add_argument('-o',
+        self.parser.add_argument('-o',
                             action='store',
                             dest='outfile',
                             default='',
                             help=''' Path to the output file (stdout if none
                             provided)''')
-        self.args = parser.parse_args()
+        self.args = self.parser.parse_args()
 
         if (self.args.hcat
             and self.args.gensets):
-                parser.print_help()
+                self.parser.print_help()
                 print('''\nerror: -H has to be used in combination with either
 \t-c, -g, or -p.''')
                 exit()
@@ -213,7 +213,7 @@ class paw:
         if (self.args.custsets
             or self.args.gensets):
             if self.args.pattern:
-                parser.print_help()
+                self.parser.print_help()
                 print('\nerror: -c, -g, and -p can only be used alone.')
                 exit()
             else:
