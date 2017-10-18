@@ -257,13 +257,13 @@ class paw:
         '''
         Generate wordlist, then write to file
         '''
-        wlist = self.gen_wordlist(self.cset)
+        self.wlist = self.gen_wordlist(self.cset)
         try:
             with open(self.args.outfile, 'a', encoding='utf-8') as wl:
-                for line in wlist:
+                for line in self.wlist:
                     wl.write('%s\n' % line)
         except OSError:
-            for i in wlist:
+            for i in self.wlist:
                 print(i)
             
     def __init__(self):
