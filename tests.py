@@ -49,10 +49,16 @@ class paw_test(unittest.TestCase):
         self.assertEqual(5, key)
         self.assertEqual(value, "%h%i%d%s%s")
 
-    def test_badchars(self):
+    def test_warning_badchars(self):
         self.paw.cset_lookup(self.badchar)
         self.assertEqual(1, self.paw.wcount)
 
+    def test_error_c_and_g(self):
+        self.paw.args.custsets = True
+        self.paw.args.gensets = True
+        with self.assertRaises(SystemExit) as value:
+            self.paw.gen_charset()
+        self.assertEqual(value.exception.code, None)
 
 if __name__ == '__main__':
     unittest.main()
