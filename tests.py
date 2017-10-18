@@ -86,6 +86,14 @@ class paw_test(unittest.TestCase):
         self.paw.parse_commands()
         words4 = self.paw.gen_wordlist(self.paw.cset)
         self.assertEqual(words4, ['11', '1B', 'B1', 'BB'])
+        
+    def test_flag_p_and_h(self):
+        self.paw.args.infile = "test_files/gen_words_sample.txt"
+        self.paw.args.pattern = True
+        self.paw.args.hcat = True
+        self.paw.parse_commands()
+        words4 = self.paw.gen_wordlist(self.paw.cset)
+        self.assertEqual(words4, ['11', '1B', 'B1', 'BB'])
 
     def test_flag_error_c_and_p(self):
         self.paw.args.custsets = True
