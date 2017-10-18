@@ -1,4 +1,6 @@
+import filecmp
 import unittest
+import tempfile
 from paw import paw
 
 class paw_test(unittest.TestCase):
@@ -9,6 +11,7 @@ class paw_test(unittest.TestCase):
         self.w2 = [["A"], ["1","2","3"]]
         self.no_duplicates = [["A","A"] ,["1", "1"]]
         self.badchar = chr(0)
+        self.tfile = tempfile.TemporaryFile(mode = 'w+t').name
         
     def test_generate_wordlist(self):
         # Set the arguments
@@ -122,6 +125,13 @@ class paw_test(unittest.TestCase):
         self.paw.patterns[0] = ['']
         self.paw.gen_hcat_cmd()
         self.assertEqual(self.paw.wcount, 1)
+        
+    def test_save_wordlist(self):
+        self.paw.args.outfile = self.tfile
+        self.paw.cset = {0: 'a'}
+        self.paw.save_wordlist()
+        self.assertTrue(filecmp.cmp(self.tfile, 'test_files/test_out'))
+        
         
 if __name__ == '__main__':
     unittest.main()
