@@ -9,7 +9,7 @@ class paw_test(unittest.TestCase):
         self.w2 = [["A"], ["1","2","3"]]
         self.no_duplicates = [["A","A"] ,["1", "1"]]
         self.badchar = chr(0)
-
+        
     def test_generate_wordlist(self):
         # Set the arguments
 
@@ -66,40 +66,62 @@ class paw_test(unittest.TestCase):
         (key, value), = self.paw.cset.items()
         self.assertEqual(value, "0123456789d")
 
+    def test_parse_cset_uneven(self):
+        self.paw.args.gensets= '[a'
+        self.paw.gen_charset()
+        self.assertEqual(self.paw.wcount, 1)
+
     def test_gen_hcat_cmd_one_h(self):
         self.paw.args.hcat = True
         self.paw.patterns[0] = ['%h']
         self.paw.gen_hcat_cmd()
+        self.assertEqual(len(self.paw.catstrs), 1)
+        self.assertEqual(self.paw.catstrs, {0: '-a 3 -1 ABCDEF ?1'})
 
+    def test_gen_hcat_cmd_one_dh(self):
+        self.paw.args.hcat = True
+        self.paw.patterns[0] = ['%dh']
+        self.paw.gen_hcat_cmd()
+        self.assertEqual(len(self.paw.catstrs), 1)
+        self.assertEqual(self.paw.catstrs, {0: '-a 3 -1 0123456789ABCDEF ?1'})
+
+    def test_gen_hcat_cmd_one_di(self):
+        self.paw.args.hcat = True
+        self.paw.patterns[0] = ['%di']
+        self.paw.gen_hcat_cmd()
+        self.assertEqual(len(self.paw.catstrs), 1)
+        self.assertEqual(self.paw.catstrs, {0: '-a 3 -2 0123456789abcdef ?2'})
+        
     def test_gen_hcat_cmd_one_i(self):
         self.paw.args.hcat = True
         self.paw.patterns[0] = ['%i']
         self.paw.gen_hcat_cmd()
+        self.assertEqual(len(self.paw.catstrs), 1)
+        self.assertEqual(self.paw.catstrs, {0: '-a 3 -2 abcdef ?2'})
         
     def test_gen_hcat_cmd_single(self):
         self.paw.args.hcat = True
         self.paw.patterns[0] = ['%h', '%i', '%d', '%s', '%s']
         self.paw.gen_hcat_cmd()
+        self.assertEqual(len(self.paw.catstrs), 1)
+        self.assertEqual(self.paw.catstrs,
+                         {0: '-a 3 -1 ABCDEF -2 abcdef ?1?2?d?s?s'})
         
     def test_gen_hcat_cmd_multi(self):
         self.paw.args.hcat = True
         self.paw.patterns[0] = ['%h', '%i', '%d', '%s', '%s']
         self.paw.patterns[1] = ['%h', '%i', '%i', '%s', '%u', '%d']
         self.paw.gen_hcat_cmd()
-
-    def test_gen_hcat_cmd_dh(self):
+        self.assertEqual(len(self.paw.catstrs), 2)
+        self.assertEqual(self.paw.catstrs,
+                         {0: '-a 3 -1 ABCDEF -2 abcdef ?1?2?d?s?s',
+                          1: '-a 3 -1 ABCDEF -2 abcdef ?1?2?2?s?u?d'})
+    
+    def test_gen_hcat_cmd_empty_pattern(self):
         self.paw.args.hcat = True
-        self.paw.patterns[0] = ['%dh', '%i', '%d', '%s', '%s']
+        self.paw.patterns[0] = ['']
         self.paw.gen_hcat_cmd()
-        
-    def test_gen_hcat_cmd_di(self):
-        self.paw.args.hcat = True
-        self.paw.patterns[0] = ['%h', '%di', '%d', '%s', '%s']
-        self.paw.gen_hcat_cmd()
-
-    def test_parse_cset_uneven(self):
-        self.paw.args.gensets= '[a'
-        self.paw.gen_charset()
+        self.assertEqual(self.paw.wcount, 1)
         
 if __name__ == '__main__':
     unittest.main()
