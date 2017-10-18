@@ -205,5 +205,5 @@ class paw_test(unittest.TestCase):
         self.assertEqual(self.paw.report, 'done with 2 warnings')
         
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(buffer=True)
 
