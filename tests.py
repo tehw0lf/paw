@@ -65,6 +65,12 @@ class paw_test(unittest.TestCase):
         self.paw.gen_charset()
         (key, value), = self.paw.cset.items()
         self.assertEqual(value, "0123456789d")
+
+    def test_gen_hcat_cmd(self):
+        self.paw.args.hcat = True
+        self.paw.patterns[0] = ['%h', '%i', '%d', '%s', '%s']
+        self.paw.gen_hcat_cmd()
+        
         
 
 if __name__ == '__main__':
