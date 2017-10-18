@@ -65,6 +65,49 @@ class paw_test(unittest.TestCase):
             self.paw.gen_charset()
         self.assertEqual(value.exception.code, None)
 
+    def test_flag_c(self):
+        self.paw.args.infile = "test_files/gen_words_sample.txt"
+        self.paw.args.custsets = True
+        self.paw.parse_commands()
+        words3 = self.paw.gen_wordlist(self.paw.cset)
+        self.assertEqual(words3, ["B1"])
+        
+    def test_flag_c_hcat(self):
+        self.paw.args.infile = "test_files/gen_words_sample.txt"
+        self.paw.args.custsets = True
+        self.paw.args.hcat = True
+        self.paw.parse_commands()
+        words3 = self.paw.gen_wordlist(self.paw.cset)
+        self.assertEqual(words3, ["B1"])
+        
+    def test_flag_p(self):
+        self.paw.args.infile = "test_files/gen_words_sample.txt"
+        self.paw.args.pattern = True
+        self.paw.parse_commands()
+        words4 = self.paw.gen_wordlist(self.paw.cset)
+        self.assertEqual(words4, ['11', '1B', 'B1', 'BB'])
+
+    def test_flag_error_c_and_p(self):
+        self.paw.args.custsets = True
+        self.paw.args.pattern = True
+        with self.assertRaises(SystemExit) as value:
+            self.paw.parse_commands()
+        self.assertEqual(value.exception.code, None)
+
+    def test_flag_error_g_and_h(self):
+        self.paw.args.hcat = True
+        self.paw.args.gensets = True
+        with self.assertRaises(SystemExit) as value:
+            self.paw.parse_commands()
+        self.assertEqual(value.exception.code, None)
+
+    def test_flag_error_g_and_p(self):
+        self.paw.args.gensets = True
+        self.paw.args.pattern = True
+        with self.assertRaises(SystemExit) as value:
+            self.paw.parse_commands()
+        self.assertEqual(value.exception.code, None)
+
     def test_parse_cset(self):
         self.paw.args.gensets = "[%dd]"
         self.paw.gen_charset()
@@ -138,8 +181,7 @@ class paw_test(unittest.TestCase):
         self.paw.cset = {0: 'a'}
         self.paw.save_wordlist()
         self.assertEqual(self.w3, self.paw.wlist)
-        
-        
+
 if __name__ == '__main__':
     unittest.main()
 
