@@ -79,11 +79,11 @@ class paw:
         '''
         catstr = '-a 3 '
         print('')
-        for i in self.patterns.values():
+        for k, i in self.patterns.items():
             pattern = ''
             hexu = ''
             hexl = ''
-            if len(i) > 1:
+            if len(''.join(i)) > 0:
                 if '%dh' in ''.join(sorted(i)):
                     hexu = '-1 %s%s ' % (static.csets['d'], static.csets['h'])
                 elif '%h' in ''.join(sorted(i)):
@@ -100,22 +100,13 @@ class paw:
                                     .replace('di', 'i')
                                     .replace('h', '1')
                                     .replace('i', '2'))
-                print(catstr + hexu + hexl + pattern.replace('??', '?'))
-                
-            elif len(i) > 0:
-                if '%h' in i:
-                    hexu = '-1 %s ' % static.csets['h']
-                if '%i' in i:
-                    hexl = '-2 %s ' % static.csets['i']
-                    
-                for j in i:
-                    pattern += ('?' + j
-                                    .replace('%', '')
-                                    .replace('dh', 'h')
-                                    .replace('di', 'i')
-                                    .replace('h', '1')
-                                    .replace('i', '2'))
-                print(catstr + hexu + hexl + pattern.replace('??', '?'))
+                self.catstrs[k] = catstr + hexu + hexl + pattern.replace('??', '?')
+            else:
+                print('warning: pattern %d is empty' % k)
+                self.wcount += 1
+        
+        for i in self.catstrs.values():
+            print(i)
                 
     def gen_pattern(self, instr):
         '''
@@ -260,6 +251,7 @@ class paw:
                         self.cset[cur] = tmpsets[i]                    
         if cnt > 0:
             print('warning: input contains uneven number of brackets')
+            self.wcount += 1
             
     def save_wordlist(self):
         '''
@@ -275,6 +267,7 @@ class paw:
                 print(i)
             
     def __init__(self):
+        self.catstrs = {}
         self.cset = {}
         self.patterns = {}        
         self.wcount = 0
