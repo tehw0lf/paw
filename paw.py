@@ -260,7 +260,6 @@ class paw:
                         self.cset[cur] = tmpsets[i]                    
         if cnt > 0:
             print('warning: input contains uneven number of brackets')
-        print(self.cset)
             
     def save_wordlist(self):
         '''
