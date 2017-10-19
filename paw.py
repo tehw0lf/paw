@@ -2,6 +2,7 @@
 import argparse
 import static
 
+
 class paw:
     '''
     generates patterns and wordlists based on preset or custom charsets
@@ -11,7 +12,7 @@ class paw:
         Determine charset from character using standard csets
         '''
         p = str()
-        #digits
+        # digits
         if instr in static.csets['d']:
             p = 'd'
         # hex upper
@@ -35,7 +36,7 @@ class paw:
             print('warning: bad char detected in input')
             self.wcount += 1
         return p
-    
+
     def from_passwords(self):
         '''
         Reads passwords from file and generates pattern
@@ -45,8 +46,8 @@ class paw:
                 self.gen_pattern(line.strip('\n'))
         print('')
         for key, value in self.patterns.items():
-            print('length: %d\t pattern: %s'  % (key, ''.join(value)))
-                
+            print('length: %d\t pattern: %s' % (key, ''.join(value)))
+
     def gen_charset(self):
         '''
         Generate charset from file or predefined charsets
@@ -67,8 +68,8 @@ class paw:
                                                + self.cset_lookup(j))))
                             except KeyError:
                                 self.patterns[i] = self.cset_lookup(j)
-        
-        elif self.args.gensets: # -g
+
+        elif self.args.gensets:  # -g
             self.parse_cset()
 
     def gen_hcat_cmd(self):
@@ -90,29 +91,30 @@ class paw:
                     hexl = '-2 %s%s ' % (static.csets['d'], static.csets['i'])
                 elif '%i' in ''.join(sorted(i)):
                     hexl = '-2 %s ' % static.csets['i']
-                    
+
                 for j in i:
                     pattern += ('?' + j
-                                    .replace('%', '')
-                                    .replace('dh', 'h')
-                                    .replace('di', 'i')
-                                    .replace('h', '1')
-                                    .replace('i', '2'))
-                self.catstrs[k] = catstr + hexu + hexl + pattern.replace('??', '?')
+                                .replace('%', '')
+                                .replace('dh', 'h')
+                                .replace('di', 'i')
+                                .replace('h', '1')
+                                .replace('i', '2'))
+                self.catstrs[k] = (catstr + hexu + hexl +
+                                   pattern.replace('??', '?'))
             else:
                 print('warning: pattern %d is empty' % k)
                 self.wcount += 1
-        
+
         for i in self.catstrs.values():
             print(i)
-                
+
     def gen_pattern(self, instr):
         '''
         Generate pattern and position specific charset from string
         '''
         # Get pattern for each string position
         pattern = ['%' + self.cset_lookup(i) for i in instr]
-        
+
         # Sort pattern and keep only unique values
         pattern = [''.join(sorted(set(i))) for i in pattern]
         if self.args.pattern:
@@ -122,8 +124,8 @@ class paw:
                                                       + instr[i])))
                 except KeyError:
                     self.cset[i] = instr[i]
-        
-        # Update length based dict with new charset        
+
+        # Update length based dict with new charset
         try:
             self.patterns[len(instr)] = [''.join(sorted(
                 set(self.patterns[len(instr)][i] + pattern[i])))
@@ -140,7 +142,7 @@ class paw:
             return arr2d[0]
         else:
             buffer_a = sorted(set(arr2d[0]))
-            #read buffer_a from arr2d (self.cset)
+            # read buffer_a from arr2d (self.cset)
             for i in range(1, len(arr2d)):
                 temparr[i-1] = sorted(set(arr2d[i]))
             buffer_b = self.gen_wordlist(temparr)
@@ -152,44 +154,50 @@ class paw:
         Parses input arguments and executes functions
         '''
         self.parser = argparse.ArgumentParser(
-            description = ''' paw - patterns and wordlists in python
+            description=''' paw - patterns and wordlists in python
                         \n standard charsets:\n %%d: {d}\n %%u: {u}
  %%l: {l}\n %%h: {h}\n %%i: {i}\n %%s: {s}
                         '''.replace('%%', '%').format(**static.csets),
-            formatter_class = argparse.RawDescriptionHelpFormatter)
-        self.parser.add_argument('-i',
-                            action='store',
-                            dest='infile',
-                            help=' Path to the input file')
-        self.parser.add_argument('-p',
-                            action='store_true',
-                            dest='pattern',
-                            help=''' Read strings from input file,
-                            generate pattern and print it
-                            ''')
-        self.parser.add_argument('-g',
-                            action='store',
-                            dest='gensets',
-                            help=(''' Generate wordlist with specified
-                                charsets for each position
-                            ([foo][bar][baz] or [%%d%%l][%%l][%%d%%u])
-                            or [fo%%d][b%%lr][%%uaz]'''))
-        self.parser.add_argument('-c',
-                            action='store_true',
-                            dest='custsets',
-                            help=''' Read charsets from input file
-                            (line number = string position)''')
-        self.parser.add_argument('-H',
-                            action='store_true',
-                            dest='hcat',
-                            help=''' Generate hashcat command
-                                (cannot be used alone)''')
-        self.parser.add_argument('-o',
-                            action='store',
-                            dest='outfile',
-                            default='',
-                            help=''' Path to the output file (stdout if none
-                            provided)''')
+            formatter_class=argparse.RawDescriptionHelpFormatter)
+        self.parser.add_argument(
+            '-i',
+            action='store',
+            dest='infile',
+            help=' Path to the input file')
+        self.parser.add_argument(
+            '-p',
+            action='store_true',
+            dest='pattern',
+            help=''' Read strings from input file,
+            generate pattern and print it
+            ''')
+        self.parser.add_argument(
+            '-g',
+            action='store',
+            dest='gensets',
+            help=(''' Generate wordlist with specified
+                charsets for each position
+                ([foo][bar][baz] or [%%d%%l][%%l][%%d%%u])
+                or [fo%%d][b%%lr][%%uaz]'''))
+        self.parser.add_argument(
+            '-c',
+            action='store_true',
+            dest='custsets',
+            help=''' Read charsets from input file
+                (line number = string position)''')
+        self.parser.add_argument(
+            '-H',
+            action='store_true',
+            dest='hcat',
+            help=''' Generate hashcat command
+                (cannot be used alone)''')
+        self.parser.add_argument(
+            '-o',
+            action='store',
+            dest='outfile',
+            default='',
+            help=''' Path to the output file (stdout if none
+                provided)''')
         self.args = self.parser.parse_args()
 
     def parse_cset(self):
@@ -218,18 +226,18 @@ class paw:
                     try:
                         self.cset[cur] = self.cset[cur] + tmpsets[i]
                     except KeyError:
-                        self.cset[cur] = tmpsets[i]                    
+                        self.cset[cur] = tmpsets[i]
         if cnt > 0:
             print('warning: input contains uneven number of brackets')
             self.wcount += 1
-        
+
     def parse_commands(self):
         if (self.args.hcat
             and self.args.gensets):
                 self.parser.print_help()
                 print('''\nerror: -H has to be used in combination with either
 \t-c, or -p.''')
-                exit()                
+                exit()
         if (self.args.custsets
             or self.args.gensets):
             if self.args.pattern:
@@ -243,7 +251,7 @@ class paw:
                 if self.args.hcat:
                     if self.args.custsets:
                         self.gen_hcat_cmd()
-            
+
         elif self.args.pattern:
             self.from_passwords()
             if self.args.hcat:
@@ -255,7 +263,7 @@ class paw:
         elif self.wcount > 0:
             self.report = 'done with %d warning' % self.wcount
             print(self.report)
-            
+
     def save_wordlist(self):
         '''
         Generate wordlist, then write to file
@@ -268,15 +276,15 @@ class paw:
         except OSError:
             for i in self.wlist:
                 print(i)
-            
+
     def __init__(self):
         self.catstrs = {}
         self.cset = {}
-        self.patterns = {}        
+        self.patterns = {}
         self.wcount = 0
         self.parse_args()
         self.parse_commands()
-        
-if __name__ == '__main__': # pragma: no cover
+
+
+if __name__ == '__main__':  # pragma: no cover
     paw()
-    
