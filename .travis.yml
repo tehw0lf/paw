@@ -3,6 +3,9 @@ python:
   - 3.6
 install:
   - pip install codecov
+  - pip install flake8
+before_script:
+  - flake8 .
 script:
   - coverage run tests.py
 after_success:
