@@ -233,24 +233,24 @@ class paw:
 
     def parse_commands(self):
         if (self.args.hcat
-            and self.args.gensets):
-                self.parser.print_help()
-                print('''\nerror: -H has to be used in combination with either
-\t-c, or -p.''')
-                exit()
+                and self.args.gensets):
+                    self.parser.print_help()
+                    print('''\nerror: -H has to be used in combination
+                    with either\t-c, or -p.''')
+                    exit()
         if (self.args.custsets
-            or self.args.gensets):
-            if self.args.pattern:
-                print(self.args.gensets)
-                self.parser.print_help()
-                print('\nerror: -c, -g, and -p can only be used alone.')
-                exit()
-            else:
-                self.gen_charset()
-                self.save_wordlist()
-                if self.args.hcat:
-                    if self.args.custsets:
-                        self.gen_hcat_cmd()
+                or self.args.gensets):
+                if self.args.pattern:
+                    print(self.args.gensets)
+                    self.parser.print_help()
+                    print('\nerror: -c, -g, and -p can only be used alone.')
+                    exit()
+                else:
+                    self.gen_charset()
+                    self.save_wordlist()
+                    if self.args.hcat:
+                        if self.args.custsets:
+                            self.gen_hcat_cmd()
 
         elif self.args.pattern:
             self.from_passwords()
