@@ -3,7 +3,7 @@ import argparse
 import static
 
 
-class paw:
+class Paw:
     '''
     generates patterns and wordlists based on preset or custom charsets
     '''
@@ -287,4 +287,4 @@ class paw:
 
 
 if __name__ == '__main__':  # pragma: no cover
-    paw()
+    paw = Paw()
