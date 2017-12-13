@@ -3,6 +3,58 @@ import argparse
 import static
 
 
+def parse_args():
+        '''
+        Parses input arguments and executes functions
+        '''
+        parser = argparse.ArgumentParser(
+            description=''' paw - patterns and wordlists in python
+                        \n standard charsets:\n %%d: {d}\n %%u: {u}
+ %%l: {l}\n %%h: {h}\n %%i: {i}\n %%s: {s}
+                        '''.replace('%%', '%').format(**static.csets),
+            formatter_class=argparse.RawDescriptionHelpFormatter)
+        parser.add_argument(
+            '-i',
+            action='store',
+            dest='infile',
+            help=' Path to the input file')
+        parser.add_argument(
+            '-p',
+            action='store_true',
+            dest='pattern',
+            help=''' Read strings from input file,
+            generate pattern and print it
+            ''')
+        parser.add_argument(
+            '-g',
+            action='store',
+            dest='gensets',
+            help=(''' Generate wordlist with specified
+                charsets for each position
+                ([foo][bar][baz] or [%%d%%l][%%l][%%d%%u])
+                or [fo%%d][b%%lr][%%uaz]'''))
+        parser.add_argument(
+            '-c',
+            action='store_true',
+            dest='custsets',
+            help=''' Read charsets from input file
+                (line number = string position)''')
+        parser.add_argument(
+            '-H',
+            action='store_true',
+            dest='hcat',
+            help=''' Generate hashcat command
+                (cannot be used alone)''')
+        parser.add_argument(
+            '-o',
+            action='store',
+            dest='outfile',
+            default='',
+            help=''' Path to the output file (stdout if none
+                provided)''')
+        return parser.parse_args()
+
+
 class Paw:
     '''
     generates patterns and wordlists based on preset or custom charsets
@@ -149,57 +201,6 @@ class Paw:
             buffer_c = [(i+j) for i in buffer_a for j in buffer_b]
             return buffer_c
 
-    def parse_args(self):
-        '''
-        Parses input arguments and executes functions
-        '''
-        self.parser = argparse.ArgumentParser(
-            description=''' paw - patterns and wordlists in python
-                        \n standard charsets:\n %%d: {d}\n %%u: {u}
- %%l: {l}\n %%h: {h}\n %%i: {i}\n %%s: {s}
-                        '''.replace('%%', '%').format(**static.csets),
-            formatter_class=argparse.RawDescriptionHelpFormatter)
-        self.parser.add_argument(
-            '-i',
-            action='store',
-            dest='infile',
-            help=' Path to the input file')
-        self.parser.add_argument(
-            '-p',
-            action='store_true',
-            dest='pattern',
-            help=''' Read strings from input file,
-            generate pattern and print it
-            ''')
-        self.parser.add_argument(
-            '-g',
-            action='store',
-            dest='gensets',
-            help=(''' Generate wordlist with specified
-                charsets for each position
-                ([foo][bar][baz] or [%%d%%l][%%l][%%d%%u])
-                or [fo%%d][b%%lr][%%uaz]'''))
-        self.parser.add_argument(
-            '-c',
-            action='store_true',
-            dest='custsets',
-            help=''' Read charsets from input file
-                (line number = string position)''')
-        self.parser.add_argument(
-            '-H',
-            action='store_true',
-            dest='hcat',
-            help=''' Generate hashcat command
-                (cannot be used alone)''')
-        self.parser.add_argument(
-            '-o',
-            action='store',
-            dest='outfile',
-            default='',
-            help=''' Path to the output file (stdout if none
-                provided)''')
-        self.args = self.parser.parse_args()
-
     def parse_cset(self):
         cur = 0
         cnt = 0
@@ -275,14 +276,14 @@ class Paw:
             for i in self.wlist:
                 print(i)
 
-    def __init__(self):
+    def __init__(self, args):
         self.catstrs = {}
         self.cset = {}
         self.patterns = {}
         self.wcount = 0
-        self.parse_args()
+        self.args = args
         self.parse_commands()
 
 
 if __name__ == '__main__':  # pragma: no cover
-    paw = Paw()
+    paw = Paw(parse_args())
