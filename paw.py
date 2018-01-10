@@ -1,22 +1,23 @@
 #!/usr/bin/python3
 import argparse
-import static
+from .static import csets
 
 
-def parse_args():
+def parse_cmdline():
         '''
-        Parses input arguments and executes functions
+        Parses input arguments and returns parser
         '''
         parser = argparse.ArgumentParser(
             description=''' paw - patterns and wordlists in python
                         \n standard charsets:\n %%d: {d}\n %%u: {u}
  %%l: {l}\n %%h: {h}\n %%i: {i}\n %%s: {s}
-                        '''.replace('%%', '%').format(**static.csets),
+                        '''.replace('%%', '%').format(**csets),
             formatter_class=argparse.RawDescriptionHelpFormatter)
         parser.add_argument(
             '-i',
             action='store',
             dest='infile',
+            default=None,
             help=' Path to the input file')
         parser.add_argument(
             '-p',
@@ -29,6 +30,7 @@ def parse_args():
             '-g',
             action='store',
             dest='gensets',
+            default=None,
             help=(''' Generate wordlist with specified
                 charsets for each position
                 ([foo][bar][baz] or [%%d%%l][%%l][%%d%%u])
@@ -49,10 +51,10 @@ def parse_args():
             '-o',
             action='store',
             dest='outfile',
-            default='',
+            default=None,
             help=''' Path to the output file (stdout if none
                 provided)''')
-        return parser.parse_args()
+        return parser, parser.parse_args()
 
 
 class Paw:
@@ -65,22 +67,22 @@ class Paw:
         '''
         p = str()
         # digits
-        if instr in static.csets['d']:
+        if instr in csets['d']:
             p = 'd'
         # hex upper
-        elif instr in static.csets['h']:
+        elif instr in csets['h']:
             p = '%h'
         # alpha upper
-        elif instr in static.csets['u']:
+        elif instr in csets['u']:
             p = 'u'
         # hex lower
-        elif instr in static.csets['i']:
+        elif instr in csets['i']:
             p = '%i'
         # alpha lower
-        elif instr in static.csets['l']:
+        elif instr in csets['l']:
             p = 'l'
         # special chars
-        elif instr in static.csets['s']:
+        elif instr in csets['s']:
             p = 's'
         # bad chars
         if ord(instr) == 0 or ord(instr) == 255:
@@ -93,36 +95,27 @@ class Paw:
         '''
         Reads passwords from file and generates pattern
         '''
-        with open(self.args.infile, 'r', encoding='utf-8') as f:
+        with open(self.infile, 'r', encoding='utf-8') as f:
             for line in f:
                 self.gen_pattern(line.strip('\n'))
         print('')
         for key, value in self.patterns.items():
             print('length: %d\t pattern: %s' % (key, ''.join(value)))
 
-    def gen_charset(self):
+    def gen_custom_charset(self):
         '''
-        Generate charset from file or predefined charsets
+        Generate custom charset from file or predefined charsets
         '''
-        if self.args.custsets:  # -c
-            if self.args.gensets:
-                self.parser.print_help()
-                print('\nerror: -c, -g, and -p can only be used alone.')
-                exit()
-            else:
-                with open(self.args.infile, 'r', encoding='utf-8') as f:
-                    for i, line in enumerate(f):
-                        self.cset[i] = list(sorted(set(line.strip('\n'))))
-                        for j in self.cset[i]:
-                            try:
-                                self.patterns[i] = ''.join(
-                                    sorted(set(self.patterns[i]
-                                               + self.cset_lookup(j))))
-                            except KeyError:
-                                self.patterns[i] = self.cset_lookup(j)
-
-        elif self.args.gensets:  # -g
-            self.parse_cset()
+        with open(self.infile, 'r', encoding='utf-8') as f:
+            for i, line in enumerate(f):
+                self.cset[i] = list(sorted(set(line.strip('\n'))))
+                for j in self.cset[i]:
+                    try:
+                        self.patterns[i] = ''.join(
+                            sorted(set(self.patterns[i]
+                                       + self.cset_lookup(j))))
+                    except KeyError:
+                        self.patterns[i] = self.cset_lookup(j)
 
     def gen_hcat_cmd(self):
         '''
@@ -136,13 +129,13 @@ class Paw:
             hexl = ''
             if len(''.join(i)) > 0:
                 if '%dh' in ''.join(sorted(i)):
-                    hexu = '-1 %s%s ' % (static.csets['d'], static.csets['h'])
+                    hexu = '-1 %s%s ' % (csets['d'], csets['h'])
                 elif '%h' in ''.join(sorted(i)):
-                    hexu = '-1 %s ' % static.csets['h']
+                    hexu = '-1 %s ' % csets['h']
                 if '%di' in ''.join(sorted(i)):
-                    hexl = '-2 %s%s ' % (static.csets['d'], static.csets['i'])
+                    hexl = '-2 %s%s ' % (csets['d'], csets['i'])
                 elif '%i' in ''.join(sorted(i)):
-                    hexl = '-2 %s ' % static.csets['i']
+                    hexl = '-2 %s ' % csets['i']
 
                 for j in i:
                     pattern += ('?' + j
@@ -169,13 +162,12 @@ class Paw:
 
         # Sort pattern and keep only unique values
         pattern = [''.join(sorted(set(i))) for i in pattern]
-        if self.args.pattern:
-            for i in range(len(instr)):
-                try:
-                    self.cset[i] = ''.join(sorted(set(self.cset[i]
-                                                      + instr[i])))
-                except KeyError:
-                    self.cset[i] = instr[i]
+        for i in range(len(instr)):
+            try:
+                self.cset[i] = ''.join(sorted(set(self.cset[i]
+                                                  + instr[i])))
+            except KeyError:
+                self.cset[i] = instr[i]
 
         # Update length based dict with new charset
         try:
@@ -204,25 +196,25 @@ class Paw:
     def parse_cset(self):
         cur = 0
         cnt = 0
-        if self.args.gensets:
-            tmpsets = self.args.gensets
+        tmpsets = self.gensets
+
         for i in range(len(tmpsets)):
             if tmpsets[i] == '[':
                 cnt += 1
                 continue
             elif tmpsets[i] == ']':
-                if not self.args.hcat:
+                if not self.hcat:
                     self.cset[cur].replace('%', '')
                 cnt -= 1
                 cur += 1
             else:
                 if tmpsets[i] == '%':
-                    if tmpsets[i+1] in static.csets.keys():
+                    if tmpsets[i+1] in csets.keys():
                         try:
                             self.cset[cur] = (self.cset[cur] +
-                                              static.csets[tmpsets[i+1]])
+                                              csets[tmpsets[i+1]])
                         except KeyError:
-                            self.cset[cur] = static.csets[tmpsets[i+1]]
+                            self.cset[cur] = csets[tmpsets[i+1]]
                 elif tmpsets[i-1] != '%':
                     try:
                         self.cset[cur] = self.cset[cur] + tmpsets[i]
@@ -232,58 +224,71 @@ class Paw:
             print('warning: input contains uneven number of brackets')
             self.wcount += 1
 
-    def parse_commands(self):
-        if (self.args.hcat
-                and self.args.gensets):
-                    self.parser.print_help()
-                    print('''\nerror: -H has to be used in combination
-                    with either\t-c, or -p.''')
-                    exit()
-        if (self.args.custsets
-                or self.args.gensets):
-                if self.args.pattern:
-                    print(self.args.gensets)
-                    self.parser.print_help()
-                    print('\nerror: -c, -g, and -p can only be used alone.')
-                    exit()
-                else:
-                    self.gen_charset()
-                    self.save_wordlist()
-                    if self.args.hcat:
-                        if self.args.custsets:
-                            self.gen_hcat_cmd()
-
-        elif self.args.pattern:
-            self.from_passwords()
-            if self.args.hcat:
-                self.gen_hcat_cmd()
-
-        if self.wcount > 1:
-            print('done with %d warnings' % self.wcount)
-        elif self.wcount > 0:
-            print('done with %d warning' % self.wcount)
-
     def save_wordlist(self):
         '''
         Generate wordlist, then write to file
         '''
         self.wlist = self.gen_wordlist(self.cset)
         try:
-            with open(self.args.outfile, 'a', encoding='utf-8') as wl:
+            with open(self.outfile, 'a', encoding='utf-8') as wl:
                 for line in self.wlist:
                     wl.write('%s\n' % line)
-        except OSError:
+        except (OSError, TypeError):  # stdout
             for i in self.wlist:
                 print(i)
 
-    def __init__(self, args):
+    def __init__(self, gensets=None, hcat=False, infile=None, outfile=None):
         self.catstrs = {}
         self.cset = {}
         self.patterns = {}
         self.wcount = 0
-        self.args = args
-        self.parse_commands()
+        self.gensets = gensets
+        self.hcat = hcat
+        self.infile = infile
+        self.outfile = outfile
 
 
 if __name__ == '__main__':  # pragma: no cover
-    paw = Paw(parse_args())
+    parser, args = parse_cmdline()
+    paw = Paw(args.gensets, args.hcat, args.infile, args.outfile)  # ?
+    if (args.custsets and args.gensets):
+        parser.print_help()
+        print('\nerror: -c, -g, and -p can only be used alone.')
+        exit()
+
+    if (args.hcat and args.gensets):
+        parser.print_help()
+        print('''\nerror: -H has to be used in combination
+        with either\t-c, or -p.''')
+        exit()
+
+    if args.custsets:
+        if args.pattern:
+            parser.print_help()
+            print('\nerror: -c, -g, and -p can only be used alone.')
+            exit()
+        else:
+            paw.gen_custom_charset()
+            paw.save_wordlist()
+            if args.hcat:
+                paw.gen_hcat_cmd()
+
+    if args.gensets:
+        if args.pattern:
+            print(args.gensets)
+            parser.print_help()
+            print('\nerror: -c, -g, and -p can only be used alone.')
+            exit()
+        else:
+            paw.parse_cset()
+            paw.save_wordlist()
+
+    elif args.pattern:
+        paw.from_passwords()
+        if args.hcat:
+            paw.gen_hcat_cmd()
+
+    if paw.wcount > 1:
+        print('done with %d warnings' % paw.wcount)
+    elif paw.wcount > 0:
+        print('done with %d warning' % paw.wcount)
