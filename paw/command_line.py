@@ -57,9 +57,9 @@ def parse_cmdline():
         return parser, parser.parse_args()
 
 
-if __name__ == '__main__':  # pragma: no cover
+def main():
     parser, args = parse_cmdline()
-    paw = paw.Paw(args.gensets, args.hcat, args.infile, args.outfile)  # ?
+    paw_cli = paw.Paw(args.gensets, args.hcat, args.infile, args.outfile)
     if (args.custsets and args.gensets):
         parser.print_help()
         print('\nerror: -c, -g, and -p can only be used alone.')
@@ -77,10 +77,10 @@ if __name__ == '__main__':  # pragma: no cover
             print('\nerror: -c, -g, and -p can only be used alone.')
             exit()
         else:
-            paw.gen_custom_charset()
-            paw.save_wordlist()
+            paw_cli.gen_custom_charset()
+            paw_cli.save_wordlist()
             if args.hcat:
-                paw.gen_hcat_cmd()
+                paw_cli.gen_hcat_cmd()
 
     if args.gensets:
         if args.pattern:
@@ -89,15 +89,15 @@ if __name__ == '__main__':  # pragma: no cover
             print('\nerror: -c, -g, and -p can only be used alone.')
             exit()
         else:
-            paw.parse_cset()
-            paw.save_wordlist()
+            paw_cli.parse_cset()
+            paw_cli.save_wordlist()
 
     elif args.pattern:
-        paw.from_passwords()
+        paw_cli.from_passwords()
         if args.hcat:
-            paw.gen_hcat_cmd()
+            paw_cli.gen_hcat_cmd()
 
-    if paw.wcount > 1:
-        print('done with %d warnings' % paw.wcount)
-    elif paw.wcount > 0:
-        print('done with %d warning' % paw.wcount)
+    if paw_cli.wcount > 1:
+        print('done with %d warnings' % paw_cli.wcount)
+    elif paw_cli.wcount > 0:
+        print('done with %d warning' % paw_cli.wcount)
