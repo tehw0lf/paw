@@ -8,4 +8,8 @@ setup(name='paw',
       author_email='tehwolf@protonmail.com',
       license='MIT',
       packages=['paw'],
-      zip_safe=False)
+      zip_safe=False,
+      entry_points={
+            'console_scripts': ['paw=paw.command_line:main'],
+      }
+      )
