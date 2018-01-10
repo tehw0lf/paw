@@ -72,15 +72,19 @@ def main():
         exit()
 
     if args.custsets:
-        if args.pattern:
-            parser.print_help()
-            print('\nerror: -c, -g, and -p can only be used alone.')
-            exit()
+        if args.infile:
+            if args.pattern:
+                parser.print_help()
+                print('\nerror: -c, -g, and -p can only be used alone.')
+                exit()
+            else:
+                paw_cli.gen_custom_charset()
+                paw_cli.save_wordlist()
+                if args.hcat:
+                    paw_cli.gen_hcat_cmd()
         else:
-            paw_cli.gen_custom_charset()
-            paw_cli.save_wordlist()
-            if args.hcat:
-                paw_cli.gen_hcat_cmd()
+            parser.print_help()
+            print('\nerror: no input file specified.')
 
     if args.gensets:
         if args.pattern:
@@ -92,10 +96,14 @@ def main():
             paw_cli.parse_cset()
             paw_cli.save_wordlist()
 
-    elif args.pattern:
-        paw_cli.from_passwords()
-        if args.hcat:
-            paw_cli.gen_hcat_cmd()
+    if args.pattern:
+        if args.infile:
+            paw_cli.from_passwords()
+            if args.hcat:
+                paw_cli.gen_hcat_cmd()
+        else:
+            parser.print_help()
+            print('\nerror: no input file specified.')
 
     if paw_cli.wcount > 1:
         print('done with %d warnings' % paw_cli.wcount)
