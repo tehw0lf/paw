@@ -192,12 +192,3 @@ class Paw:
         except (OSError, TypeError):  # stdout
             for i in self.wlist:
                 print(i)
-
-    def __init__(self, gensets=None, hcat=False, infile=None):
-        self.catstrs = {}
-        self.cset = {}
-        self.patterns = {}
-        self.wcount = 0
-        self.gensets = gensets
-        self.hcat = hcat
-        self.infile = infile
