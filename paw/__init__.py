@@ -169,20 +169,20 @@ class Paw:
             print('warning: input contains uneven number of brackets')
             self.wcount += 1
 
-    def save_wordlist(self):
+    def save_wordlist(self, outfile=None):
         '''
         Generate wordlist, then write to file
         '''
         self.wlist = self.gen_wordlist(self.cset)
         try:
-            with open(self.outfile, 'a', encoding='utf-8') as wl:
+            with open(outfile, 'a', encoding='utf-8') as wl:
                 for line in self.wlist:
                     wl.write('%s\n' % line)
         except (OSError, TypeError):  # stdout
             for i in self.wlist:
                 print(i)
 
-    def __init__(self, gensets=None, hcat=False, infile=None, outfile=None):
+    def __init__(self, gensets=None, hcat=False, infile=None):
         self.catstrs = {}
         self.cset = {}
         self.patterns = {}
@@ -190,4 +190,3 @@ class Paw:
         self.gensets = gensets
         self.hcat = hcat
         self.infile = infile
-        self.outfile = outfile
