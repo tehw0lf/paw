@@ -114,7 +114,7 @@ class Paw:
         Generate pattern and position specific charset from string
         '''
         # Get pattern for each string position
-        pattern = ['%' + self.cset_lookup(i) for i in instr]
+        pattern = ('%' + self.cset_lookup(i) for i in instr)
 
         # Sort pattern and keep only unique values
         pattern = [''.join(sorted(set(i))) for i in pattern]
