@@ -59,7 +59,7 @@ def parse_cmdline():
 
 def main():
     parser, args = parse_cmdline()
-    paw_cli = paw.Paw(args.gensets, args.hcat, args.infile, args.outfile)
+    paw_cli = paw.Paw(args.gensets, args.hcat, args.infile)
     if (args.custsets and args.gensets):
         parser.print_help()
         print('\nerror: -c, -g, and -p can only be used alone.')
