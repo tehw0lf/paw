@@ -6,6 +6,15 @@ class Paw:
     '''
     generates patterns and wordlists based on preset or custom charsets
     '''
+    def __init__(self, gensets=None, hcat=False, infile=None):
+        self.catstrs = {}
+        self.cset = {}
+        self.patterns = {}
+        self.wcount = 0
+        self.gensets = gensets
+        self.hcat = hcat
+        self.infile = infile
+
     def cset_lookup(self, instr):
         '''
         Determine charset from character using standard csets
