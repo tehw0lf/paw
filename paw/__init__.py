@@ -163,19 +163,18 @@ class Paw:
                     self.cset[cur].replace('%', '')
                 cnt -= 1
                 cur += 1
-            else:
-                if tmpsets[i] == '%':
-                    if tmpsets[i+1] in csets.keys():
-                        try:
-                            self.cset[cur] = (self.cset[cur] +
-                                              csets[tmpsets[i+1]])
-                        except KeyError:
-                            self.cset[cur] = csets[tmpsets[i+1]]
-                elif tmpsets[i-1] != '%':
+            elif tmpsets[i] == '%':
+                if tmpsets[i+1] in csets.keys():
                     try:
-                        self.cset[cur] = self.cset[cur] + tmpsets[i]
+                        self.cset[cur] = (self.cset[cur] +
+                                          csets[tmpsets[i+1]])
                     except KeyError:
-                        self.cset[cur] = tmpsets[i]
+                        self.cset[cur] = csets[tmpsets[i+1]]
+            elif tmpsets[i-1] != '%':
+                try:
+                    self.cset[cur] = self.cset[cur] + tmpsets[i]
+                except KeyError:
+                    self.cset[cur] = tmpsets[i]
         if cnt > 0:
             logging.warning('input contains uneven number of brackets')
             self.wcount += 1
