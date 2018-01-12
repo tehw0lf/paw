@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 from .static import csets
+import logging
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 
 class Paw:
@@ -41,7 +43,7 @@ class Paw:
         # bad chars
         if ord(instr) == 0 or ord(instr) == 255:
             p = 'b'
-            print('warning: bad char detected in input')
+            logging.warning('bad char detected in input')
             self.wcount += 1
         return p
 
@@ -101,7 +103,7 @@ class Paw:
                 self.catstrs[k] = (catstr + hexu + hexl +
                                    pattern.replace('??', '?'))
             else:
-                print('warning: pattern %d is empty' % k)
+                logging.warning('pattern %d is empty' % k)
                 self.wcount += 1
 
         for i in self.catstrs.values():
@@ -175,7 +177,7 @@ class Paw:
                     except KeyError:
                         self.cset[cur] = tmpsets[i]
         if cnt > 0:
-            print('warning: input contains uneven number of brackets')
+            logging.warning('input contains uneven number of brackets')
             self.wcount += 1
 
     def save_wordlist(self, outfile=None):
