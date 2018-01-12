@@ -64,12 +64,11 @@ class Paw:
         '''
         with open(self.infile, 'r', encoding='utf-8') as f:
             for i, line in enumerate(f):
-                self.cset[i] = list(sorted(set(line.strip('\n'))))
+                self.cset[i] = set(line.strip('\n'))
                 for j in self.cset[i]:
                     try:
-                        self.patterns[i] = ''.join(
-                            sorted(set(self.patterns[i]
-                                       + self.cset_lookup(j))))
+                        self.patterns[i] = set(self.patterns[i]
+                                               + self.cset_lookup(j))
                     except KeyError:
                         self.patterns[i] = self.cset_lookup(j)
 
@@ -113,19 +112,20 @@ class Paw:
         '''
         Generate pattern and position specific charset from string
         '''
-        # Get pattern for each string position
-        pattern = ('%' + self.cset_lookup(i) for i in instr)
-
-        # Sort pattern and keep only unique values
-        pattern = [''.join(sorted(set(i))) for i in pattern]
+        pattern = list()
+        # Get pattern and charset for each string position
         for i in range(len(instr)):
+            pattern.append('%' + self.cset_lookup(instr[i]))
             try:
-                self.cset[i] = ''.join(sorted(set(self.cset[i]
-                                                  + instr[i])))
+                self.cset[i] = ''.join(set(self.cset[i]
+                                           + instr[i]))
             except KeyError:
                 self.cset[i] = instr[i]
 
-        # Update length based dict with new charset
+        # Filter duplicates from pattern and sort it
+        pattern = [''.join(sorted(set(i))) for i in pattern]
+
+        # Update length based dict with new pattern
         try:
             self.patterns[len(instr)] = [''.join(sorted(
                 set(self.patterns[len(instr)][i] + pattern[i])))
