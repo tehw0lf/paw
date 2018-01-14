@@ -8,6 +8,6 @@ install:
 before_script:
   - flake8 .
 script:
-  - coverage run paw/tests/__init__.py
+  - coverage run -m unittest discover
 after_success:
   codecov
