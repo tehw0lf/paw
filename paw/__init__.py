@@ -133,18 +133,18 @@ class Paw:
         except KeyError:
             self.patterns[len(instr)] = pattern
 
-    def gen_wordlist(self, arr2d):
+    def gen_wordlist(self, cset_dict):
         '''
         Recursively build wordlist
         '''
         temparr = {}
-        if len(arr2d) == 1:
-            return arr2d[0]
+        if len(cset_dict) == 1:
+            return cset_dict[0]
         else:
-            buffer_a = sorted(set(arr2d[0]))
-            # read buffer_a from arr2d (self.cset)
-            for i in range(1, len(arr2d)):
-                temparr[i-1] = sorted(set(arr2d[i]))
+            buffer_a = sorted(set(cset_dict[0]))
+            # read buffer_a from self.cset
+            for i in range(1, len(cset_dict)):
+                temparr[i-1] = sorted(set(cset_dict[i]))
             buffer_b = self.gen_wordlist(temparr)
             buffer_c = [(i+j) for i in buffer_a for j in buffer_b]
             return buffer_c
