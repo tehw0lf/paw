@@ -186,6 +186,7 @@ class Paw:
         self.wlist = self.gen_wordlist(self.cset)
         try:
             with open(outfile, 'a', encoding='utf-8') as wl:
+                print('paw will now write %d lines.' % len(self.wlist))
                 for line in self.wlist:
                     wl.write('%s\n' % line)
         except (OSError, TypeError):  # stdout
