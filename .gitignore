@@ -1,4 +1,6 @@
 __pycache__
 .vscode
+build/
+dist/
 paw/tests/test_files/tmp
 paw.egg-info/
