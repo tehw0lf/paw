@@ -8,14 +8,16 @@ class Paw:
     '''
     generates patterns and wordlists based on preset or custom charsets
     '''
-    def __init__(self, gensets=None, hcat=False, infile=None):
+    def __init__(self, gensets=None, hcat=False, infile=None, outfile=None):
         self.catstrs = {}
+        self.counter = 0
         self.cset = {}
         self.patterns = {}
         self.wcount = 0
         self.gensets = gensets
         self.hcat = hcat
         self.infile = infile
+        self.outfile = outfile
 
     def cset_lookup(self, instr):
         '''
@@ -133,21 +135,25 @@ class Paw:
         except KeyError:
             self.patterns[len(instr)] = pattern
 
-    def gen_wordlist(self, cset_dict):
-        '''
-        Recursively build wordlist
-        '''
-        temparr = {}
-        if len(cset_dict) == 1:
-            return cset_dict[0]
+    def build_word(self):
+        self.counter += 1
+        buffer = str()
+        for i in range(len(self.positions)):
+            buffer += self.cset[i][self.positions[i]]
+        return buffer
+
+    def gen_wordlist(self, prev_iter):
+        if prev_iter is None:
+            self.positions = ['' for i in self.cset]
+            iter = 0
         else:
-            buffer_a = sorted(set(cset_dict[0]))
-            # read buffer_a from self.cset
-            for i in range(1, len(cset_dict)):
-                temparr[i-1] = sorted(set(cset_dict[i]))
-            buffer_b = self.gen_wordlist(temparr)
-            buffer_c = [(i+j) for i in buffer_a for j in buffer_b]
-            return buffer_c
+            iter = prev_iter + 1
+        for i in range(len(self.cset[iter])):
+            self.positions[iter] = i
+            if iter == len(self.cset) - 1:
+                self.save_word(self.build_word())
+            else:
+                self.gen_wordlist(iter)
 
     def parse_cset(self):
         cur = 0
@@ -179,16 +185,12 @@ class Paw:
             logging.warning('input contains uneven number of brackets')
             self.wcount += 1
 
-    def save_wordlist(self, outfile=None):
+    def save_word(self, word):
         '''
-        Generate wordlist, then write to file
+        Write word to file
         '''
-        self.wlist = self.gen_wordlist(self.cset)
         try:
-            with open(outfile, 'a', encoding='utf-8') as wl:
-                print('paw will now write %d lines.' % len(self.wlist))
-                for line in self.wlist:
-                    wl.write('%s\n' % line)
+            with open(self.outfile, 'a', encoding='utf-8') as wl:
+                wl.write('%s\n' % word)
         except (OSError, TypeError):  # stdout
-            for i in self.wlist:
-                print(i)
+            print(word)
