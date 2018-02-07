@@ -59,7 +59,7 @@ def parse_cmdline():
 
 def main():
     parser, args = parse_cmdline()
-    paw_cli = paw.Paw(args.gensets, args.hcat, args.infile)
+    paw_cli = paw.Paw(args.gensets, args.hcat, args.infile, args.outfile)
     if (args.custsets and args.gensets):
         parser.print_help()
         print('\nerror: -c, -g, and -p can only be used alone.')
@@ -79,7 +79,9 @@ def main():
                 exit()
             else:
                 paw_cli.gen_custom_charset()
-                paw_cli.save_wordlist(args.outfile)
+                paw_cli.gen_wordlist(None)
+                if args.outfile:
+                    print('%d lines written.' % paw_cli.counter)
                 if args.hcat:
                     paw_cli.gen_hcat_cmd()
         else:
@@ -94,7 +96,9 @@ def main():
             exit()
         else:
             paw_cli.parse_cset()
-            paw_cli.save_wordlist(args.outfile)
+            paw_cli.gen_wordlist(None)
+            if args.outfile:
+                print('%d lines written.' % paw_cli.counter)
 
     if args.pattern:
         if args.infile:
