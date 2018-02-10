@@ -184,7 +184,7 @@ class Paw:
             logging.warning('input contains uneven number of brackets')
             self.wcount += 1
 
-    def save_wordlist(self, outfile):
+    def save_wordlist(self, outfile=None):
         '''
         Write wordlist to file
         '''
