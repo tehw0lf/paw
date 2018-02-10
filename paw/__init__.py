@@ -61,11 +61,11 @@ class Paw:
 
     def gen_custom_charset(self):
         '''
-        Generate custom charset from file or predefined charsets
+        Generate custom charset from file
         '''
         with open(self.infile, 'r', encoding='utf-8') as f:
             for i, line in enumerate(f):
-                self.cset[i] = set(line.strip('\n'))
+                self.cset[i] = list(set(line.strip('\n')))
                 for j in self.cset[i]:
                     try:
                         self.patterns[i] = set(self.patterns[i]
@@ -180,6 +180,8 @@ class Paw:
                     self.cset[cur] = self.cset[cur] + tmpsets[i]
                 except KeyError:
                     self.cset[cur] = tmpsets[i]
+        for key in self.cset.keys():
+            self.cset[key] = ''.join(sorted(set(self.cset[key])))
         if cnt > 0:
             logging.warning('input contains uneven number of brackets')
             self.wcount += 1
