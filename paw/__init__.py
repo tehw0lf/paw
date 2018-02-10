@@ -8,7 +8,7 @@ class Paw:
     '''
     generates patterns and wordlists based on preset or custom charsets
     '''
-    def __init__(self, gensets=None, hcat=False, infile=None, outfile=None):
+    def __init__(self, gensets=None, hcat=False, infile=None):
         self.catstrs = {}
         self.counter = 0
         self.cset = {}
@@ -17,7 +17,6 @@ class Paw:
         self.gensets = gensets
         self.hcat = hcat
         self.infile = infile
-        self.outfile = outfile
 
     def cset_lookup(self, instr):
         '''
@@ -142,7 +141,7 @@ class Paw:
             buffer += self.cset[i][self.positions[i]]
         return buffer
 
-    def gen_wordlist(self, prev_iter):
+    def gen_wordlist(self, prev_iter=None):
         if prev_iter is None:
             self.positions = ['' for i in self.cset]
             iter = 0
@@ -151,9 +150,9 @@ class Paw:
         for i in range(len(self.cset[iter])):
             self.positions[iter] = i
             if iter == len(self.cset) - 1:
-                self.save_word(self.build_word())
+                yield self.build_word()
             else:
-                self.gen_wordlist(iter)
+                yield from self.gen_wordlist(iter)
 
     def parse_cset(self):
         cur = 0
@@ -185,12 +184,14 @@ class Paw:
             logging.warning('input contains uneven number of brackets')
             self.wcount += 1
 
-    def save_word(self, word):
+    def save_wordlist(self, outfile):
         '''
-        Write word to file
+        Write wordlist to file
         '''
         try:
-            with open(self.outfile, 'a', encoding='utf-8') as wl:
-                wl.write('%s\n' % word)
+            with open(outfile, 'a', encoding='utf-8') as wl:
+                for word in self.gen_wordlist():
+                    wl.write('%s\n' % word)
         except (OSError, TypeError):  # stdout
-            print(word)
+            for word in self.gen_wordlist():
+                print(word)
