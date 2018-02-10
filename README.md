@@ -64,7 +64,7 @@ In order to use individual components from the library, simply `import paw`.
 >> `instr`: String to build pattern from.
 
 - `gen_wordlist()`: generate wordlist from character set
-> Create a wordlist from the provided charsets through recursion, ensuring that all characters are used. Requires that `cset_dict` was built using either `parse_cset()` or `gen_custom_charset()` beforehand.
+> Create a wordlist from the provided charsets through recursion, ensuring that all characters are used. Requires `paw.cset` to be built either manually or by using the functions `parse_cset()` or `gen_custom_charset()` beforehand.
 
 - `parse_cset()`: parse input character set
 > Read user input custom character set and replace standard charset identifiers with the associated characters (e.g. `%d` will be converted to `0123456789`). Requires that `paw.gensets` contains position specific character sets within brackets. The equivalent CLI command is `-g`.
