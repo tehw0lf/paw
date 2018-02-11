@@ -137,18 +137,18 @@ class Paw:
     def build_word(self):
         self.counter += 1
         buffer = str()
-        for i in range(len(self.positions)):
-            buffer += self.cset[i][self.positions[i]]
+        for idx, val in enumerate(self.positions):
+            buffer += self.cset[idx][val]
         return buffer
 
     def gen_wordlist(self, prev_iter=None):
         if prev_iter is None:
-            self.positions = ['' for i in self.cset]
+            self.positions = [0 for i in self.cset]
             iter = 0
         else:
             iter = prev_iter + 1
-        for i in range(len(self.cset[iter])):
-            self.positions[iter] = i
+        for idx, _ in enumerate(self.cset[iter]):
+            self.positions[iter] = idx
             if iter == len(self.cset) - 1:
                 yield self.build_word()
             else:
