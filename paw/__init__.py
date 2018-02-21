@@ -136,10 +136,8 @@ class Paw:
             self.patterns[len(instr)] = pattern
 
     def build_word(self):
-        buffer = str()
-        for idx, val in enumerate(self.positions):
-            buffer += self.cset[idx][val]
-        return buffer
+        return ''.join([self.cset[idx][val]
+                        for idx, val in enumerate(self.positions)])
 
     def gen_wordlist(self, prev_iter=None):
         if prev_iter is None:
