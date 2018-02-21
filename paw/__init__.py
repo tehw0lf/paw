@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 from .static import csets
+import functools
 import logging
+import operator
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 
@@ -10,7 +12,6 @@ class Paw:
     '''
     def __init__(self, gensets=None, hcat=False, infile=None):
         self.catstrs = {}
-        self.counter = 0
         self.cset = {}
         self.patterns = {}
         self.wcount = 0
@@ -135,7 +136,6 @@ class Paw:
             self.patterns[len(instr)] = pattern
 
     def build_word(self):
-        self.counter += 1
         buffer = str()
         for idx, val in enumerate(self.positions):
             buffer += self.cset[idx][val]
@@ -192,6 +192,8 @@ class Paw:
         '''
         try:
             with open(outfile, 'a', encoding='utf-8') as wl:
+                print('generating %d lines.' % functools.reduce(operator.mul,
+                      [len(i) for i in self.cset.values()], 1))
                 for word in self.gen_wordlist():
                     wl.write('%s\n' % word)
         except (OSError, TypeError):  # stdout
