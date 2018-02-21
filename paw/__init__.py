@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from .static import csets
+from .wgen import gen_wordlist
 import functools
 import logging
 import operator
@@ -192,8 +193,8 @@ class Paw:
             with open(outfile, 'a', encoding='utf-8') as wl:
                 print('generating %d lines.' % functools.reduce(operator.mul,
                       [len(i) for i in self.cset.values()], 1))
-                for word in self.gen_wordlist():
+                for word in gen_wordlist(self.cset):
                     wl.write('%s\n' % word)
         except (OSError, TypeError):  # stdout
-            for word in self.gen_wordlist():
+            for word in gen_wordlist(self.cset):
                 print(word)
