@@ -4,6 +4,7 @@ import paw
 
 class paw_test(unittest.TestCase):
     def setUp(self):
+        self.gen_wordlist = paw.gen_wordlist
         self.paw = paw.Paw()
         self.w1 = [["A", "B", "C"], ["1", "2", "3"]]
         self.w2 = [["A"], ["1", "2", "3"]]
