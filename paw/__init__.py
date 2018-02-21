@@ -136,23 +136,6 @@ class Paw:
         except KeyError:
             self.patterns[len(instr)] = pattern
 
-    def build_word(self):
-        return ''.join([self.cset[idx][val]
-                        for idx, val in enumerate(self.positions)])
-
-    def gen_wordlist(self, prev_iter=None):
-        if prev_iter is None:
-            self.positions = [0 for i in self.cset]
-            iter = 0
-        else:
-            iter = prev_iter + 1
-        for idx, _ in enumerate(self.cset[iter]):
-            self.positions[iter] = idx
-            if iter == len(self.cset) - 1:
-                yield self.build_word()
-            else:
-                yield from self.gen_wordlist(iter)
-
     def parse_cset(self):
         cur = 0
         cnt = 0
