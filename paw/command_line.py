@@ -80,8 +80,6 @@ def main():
             else:
                 paw_cli.gen_custom_charset()
                 paw_cli.save_wordlist(args.outfile)
-                if args.outfile:
-                    print('%d lines written.' % paw_cli.counter)
                 if args.hcat:
                     paw_cli.gen_hcat_cmd()
         else:
@@ -97,8 +95,6 @@ def main():
         else:
             paw_cli.parse_cset()
             paw_cli.save_wordlist(args.outfile)
-            if args.outfile:
-                print('%d lines written.' % paw_cli.counter)
 
     if args.pattern:
         if args.infile:
