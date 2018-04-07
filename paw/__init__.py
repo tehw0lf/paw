@@ -12,6 +12,7 @@ class Paw:
     generates patterns and wordlists based on preset or custom charsets
     '''
     def __init__(self, gensets=None, hcat=False, infile=None):
+        self.gen_wordlist = wlgen.gen_wordlist_iter
         self.catstrs = {}
         self.cset = {}
         self.patterns = {}
@@ -176,8 +177,8 @@ class Paw:
             with open(outfile, 'a', encoding='utf-8') as wl:
                 print('generating %d lines.' % functools.reduce(operator.mul,
                       [len(i) for i in self.cset.values()], 1))
-                for word in wlgen.gen_wordlist_iter(self.cset):
+                for word in self.gen_wordlist(self.cset):
                     wl.write('%s\n' % word)
         except (OSError, TypeError):  # stdout
-            for word in wlgen.gen_wordlist_iter(self.cset):
+            for word in self.gen_wordlist(self.cset):
                 print(word)
