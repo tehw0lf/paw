@@ -7,7 +7,7 @@ setup(name='paw',
       author='tehw0lf',
       author_email='tehwolf@protonmail.com',
       license='MIT',
-      dependency_links=['''https://github.com/tehw0lf/wlgen/tarball/master
+      dependency_links=['''https://github.com/tehw0lf/wlgen/tarball/master \
 #egg=wlgen-1.1'''],
       install_requires=['wlgen>=1.1'],
       packages=['paw'],
