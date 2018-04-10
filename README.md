@@ -33,6 +33,9 @@ In order to use individual components from the library, simply `import paw`.
 - `-H`: generate [hashcat](https://github.com/hashcat/hashcat) command
 > This will output the hashcat command corresponding to a (detected) pattern, allowing keyspace reduction and usage with hashcats mask attack mode. `-H` is experimental and can only be used with `-p` and `-c`. This project is not affiliated with [hashcat](https://github.com/hashcat/hashcat) in any way.
 
+- `-b`: maximum buffer size
+> This argument enables the user to define a custom buffer size. By default, paw will buffer 256 words before writing to the file.
+
 # Functions (library use)
 - `cset_lookup()`: determine charset for character
 > Return the standard character containing the input character, or a warning if it's a bad character (e.g. `0` or `255`). This function uses the predefined character sets from static.py.
