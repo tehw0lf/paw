@@ -169,16 +169,22 @@ class Paw:
             logging.warning('input contains uneven number of brackets')
             self.wcount += 1
 
-    def save_wordlist(self, outfile=None):
+    def save_wordlist(self, outfile=None, max_buf=256):
         '''
         Write wordlist to file
         '''
         try:
-            with open(outfile, 'a', encoding='utf-8') as wl:
+            buffer = []
+            with open(outfile, 'w', encoding='utf-8') as wl:
                 print('generating %d lines.' % functools.reduce(operator.mul,
                       [len(i) for i in self.cset.values()], 1))
                 for word in self.gen_wordlist(self.cset):
-                    wl.write('%s\n' % word)
+                    buffer.append(word)
+                    if len(buffer) == max_buf:
+                        wl.write('\n'.join(buffer)+'\n')
+                        buffer = []
+                else:
+                    wl.write('\n'.join(buffer))
         except (OSError, TypeError):  # stdout
             for word in self.gen_wordlist(self.cset):
                 print(word)
