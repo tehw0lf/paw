@@ -86,3 +86,4 @@ This function uses the predefined character sets from static.py.
 
 > Arguments:
 >> `outfile`: The output file, default is `None` for stdout.
+>> `max_buf`: Maximum buffer size, default is 256.
