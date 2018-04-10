@@ -77,3 +77,4 @@ In order to use individual components from the library, simply `import paw`.
 
 > Arguments:
 >> `outfile`: The output file, default is `None` for stdout.
+>> `max_buf`: Maximum buffer size, default is 256.
