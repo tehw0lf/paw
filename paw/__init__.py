@@ -11,8 +11,13 @@ class Paw:
     '''
     generates patterns and wordlists based on preset or custom charsets
     '''
-    def __init__(self, gensets=None, hcat=False, infile=None):
-        self.gen_wordlist = wlgen.gen_wordlist_iter
+    def __init__(self, gensets=None, hcat=False, infile=None, algo=0):
+        if algo == 0:
+            self.gen_wordlist = wlgen.gen_wordlist_iter
+        elif algo == 1:
+            self.gen_wordlist = wlgen.gen_wordlist
+        elif algo == 2:
+            self.gen_wordlist = wlgen.gen_words
         self.catstrs = {}
         self.cset = {}
         self.patterns = {}
