@@ -27,12 +27,6 @@ def parse_cmdline():
             generate pattern and print it
             ''')
         parser.add_argument(
-            '-b',
-            action='store',
-            dest='max_buf',
-            default=256,
-            help=' Maximum buffer size (default: 256)')
-        parser.add_argument(
             '-g',
             action='store',
             dest='gensets',
