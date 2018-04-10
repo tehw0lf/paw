@@ -42,6 +42,15 @@ def parse_cmdline():
             help=''' Read charsets from input file
                 (line number = string position)''')
         parser.add_argument(
+            '-a',
+            action='store',
+            dest='algo',
+            default=0,
+            help=''' Algorithm to use for wordlist generation.
+                0: itertools.product (stable, default) | 1: build wordlist
+                in memory (do not use this for large lists) | 2: generate
+                wordlist on the fly (slowest)''')
+        parser.add_argument(
             '-H',
             action='store_true',
             dest='hcat',

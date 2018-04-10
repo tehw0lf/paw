@@ -25,10 +25,18 @@ In order to use individual components from the library, simply `import paw`.
 > Read a list of strings from an input file (specified with `-i`) and output the patterns detected for each string length (patterns of the same string length are merged).
 
 - `-g`: wordlist from generated character sets
-> Create a wordlist from provided charsets, whereas each string position is represented by brackets (`[ABC][123]` will create `'A1', 'A2', ...,'C3'`). Supports  standard charset integration preceded by `%` (`[%igh] == 'abcdefgh'`). The built in charsets are `%d, %h, %i, %u, %l, %s`, which are defined in `static.py` and can be freely combined and customized for each string position of the resulting wordlist.
+> Create a wordlist from provided charsets, whereas each string position is represented by brackets (`[ABC][123]` will create `'A1', 'A2', ...,'C3'`). Supports  standard charset integration preceded by `%` (`[%igh] == 'abcdefgh'`).  
+The built in charsets are `%d, %h, %i, %u, %l, %s`, which are defined in `static.py` and can be freely combined and customized for each string position of the resulting wordlist.
 
 - `-c`: wordlist from file containing character sets
 > Like `-g` above, with the difference that the charsets are read from an input file (like the pattern when using `-p`).
+
+- `-a`: algorithm to use for wordlist generation
+> There are three options:  
+`0 (stable, default)`: This uses `itertools.product` to generate the wordlist, which is memory efficient and provides a decent speed.  
+`1`: `gen_wordlist` builds the whole wordlist in memory before writing it to a file. While the write process itself is faster than option `0`, this does
+not work for large lists as paw will run into memory errors.  
+`2`: `gen_words` generates the wordlist word for word, which is memory efficient, but not as fast as `itertools.product`.
 
 - `-H`: generate [hashcat](https://github.com/hashcat/hashcat) command
 > This will output the hashcat command corresponding to a (detected) pattern, allowing keyspace reduction and usage with hashcats mask attack mode. `-H` is experimental and can only be used with `-p` and `-c`. This project is not affiliated with [hashcat](https://github.com/hashcat/hashcat) in any way.
@@ -38,7 +46,8 @@ In order to use individual components from the library, simply `import paw`.
 
 # Functions (library use)
 - `cset_lookup()`: determine charset for character
-> Return the standard character containing the input character, or a warning if it's a bad character (e.g. `0` or `255`). This function uses the predefined character sets from static.py.
+> Return the standard character containing the input character, or a warning if it's a bad character (e.g. `0` or `255`).  
+This function uses the predefined character sets from static.py.
 
 > Arguments:
 >> `instr`: Single ASCII character.
