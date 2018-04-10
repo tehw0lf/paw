@@ -1,5 +1,6 @@
 __pycache__
 .vscode
+.eggs/
 build/
 dist/
 paw/tests/test_files/tmp
