@@ -54,6 +54,12 @@ def parse_cmdline():
             default=None,
             help=''' Path to the output file (stdout if none
                 provided)''')
+        parser.add_argument(
+            '-b',
+            action='store',
+            dest='max_buf',
+            default=256,
+            help=' Maximum buffer size (default: 256)')
         return parser, parser.parse_args()
 
 
@@ -79,7 +85,7 @@ def main():
                 exit()
             else:
                 paw_cli.gen_custom_charset()
-                paw_cli.save_wordlist(args.outfile)
+                paw_cli.save_wordlist(args.outfile, args.max_buf)
                 if args.hcat:
                     paw_cli.gen_hcat_cmd()
         else:
@@ -94,7 +100,7 @@ def main():
             exit()
         else:
             paw_cli.parse_cset()
-            paw_cli.save_wordlist(args.outfile)
+            paw_cli.save_wordlist(args.outfile, args.max_buf)
 
     if args.pattern:
         if args.infile:

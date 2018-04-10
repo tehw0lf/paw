@@ -6,9 +6,10 @@ import sys
 
 class save_wordlist_test(paw_test):
     def test_save_wordlist(self):
+        max_buf = 1
         outfile = self.tfilepath
         self.paw.cset = {0: 'a'}
-        self.paw.save_wordlist(outfile)
+        self.paw.save_wordlist(outfile, max_buf)
         self.assertTrue(filecmp.cmp(outfile,
                                     'paw/tests/test_files/test_out'))
 
