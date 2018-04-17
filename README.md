@@ -8,11 +8,10 @@ Python 3.x (developed on Python 3.6.4)
 # Instructions
 ## Installation
 ```
-git clone https://github.com/tehw0lf/paw.git
-cd paw
-python setup.py test (optional unit tests to ensure functionality)
-pip install .
+pip install git+https://github.com/tehw0lf/paw
 ```
+
+or download the [latest release](https://github.com/tehw0lf/paw/releases/latest).
 
 ## Command line usage
 Installation via pip will add paw to PATH, thus the command line interface can be called with `paw`.
