@@ -9,6 +9,6 @@ class parse_cset_test(paw_test):
         self.assertEqual(value, "0123456789d")
 
     def test_parse_cset_uneven(self):
-        self.paw.gensets = '[a'
+        self.paw.gensets = "[a"
         self.paw.parse_cset()
         self.assertEqual(self.paw.wcount, 1)
