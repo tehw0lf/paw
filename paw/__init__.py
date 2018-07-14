@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 from .static import csets
-import re
-import wlgen
 import functools
 import logging
 import operator
+import re
+import sys
+import wlgen
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
@@ -149,20 +150,24 @@ class Paw:
         tmpsets = self.gensets
         matches = re.findall("\[(.*?\]?)\]", tmpsets)
         for midx, match in enumerate(matches):
-            for cidx, char in enumerate(match):
-                if char == "%":
-                    if match[cidx + 1] in csets.keys():
+            if match == "":
+                logging.error("empty character set detected, aborting")
+                sys.exit()
+            else:
+                for cidx, char in enumerate(match):
+                    if char == "%":
+                        if match[cidx + 1] in csets.keys():
+                            try:
+                                self.cset[midx] = (
+                                    self.cset[midx] + csets[match[cidx + 1]]
+                                )
+                            except KeyError:
+                                self.cset[midx] = csets[match[cidx + 1]]
+                    elif match[cidx - 1] != "%":
                         try:
-                            self.cset[midx] = (
-                                self.cset[midx] + csets[match[cidx + 1]]
-                            )
+                            self.cset[midx] = self.cset[midx] + char
                         except KeyError:
-                            self.cset[midx] = csets[match[cidx + 1]]
-                elif match[cidx - 1] != "%":
-                    try:
-                        self.cset[midx] = self.cset[midx] + char
-                    except KeyError:
-                        self.cset[midx] = char
+                            self.cset[midx] = char
         for key in self.cset.keys():
             self.cset[key] = "".join(sorted(set(self.cset[key])))
 
