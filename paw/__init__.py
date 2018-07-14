@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from .static import csets
+import re
 import wlgen
 import functools
 import logging
@@ -141,35 +142,29 @@ class Paw:
             self.patterns[len(instr)] = pattern
 
     def parse_cset(self):
-        cur = 0
-        cnt = 0
+        """
+        Parses character sets in the form [abc][123]
+        ([] represents a string position in the output)
+        """
         tmpsets = self.gensets
-
-        for i in range(len(tmpsets)):
-            if tmpsets[i] == "[":
-                cnt += 1
-                continue
-            elif tmpsets[i] == "]":
-                if not self.hcat:
-                    self.cset[cur].replace("%", "")
-                cnt -= 1
-                cur += 1
-            elif tmpsets[i] == "%":
-                if tmpsets[i + 1] in csets.keys():
+        matches = re.findall("\[(.*?\]?)\]", tmpsets)
+        for midx, match in enumerate(matches):
+            for cidx, char in enumerate(match):
+                if char == "%":
+                    if match[cidx + 1] in csets.keys():
+                        try:
+                            self.cset[midx] = (
+                                self.cset[midx] + csets[match[cidx + 1]]
+                            )
+                        except KeyError:
+                            self.cset[midx] = csets[match[cidx + 1]]
+                elif match[cidx - 1] != "%":
                     try:
-                        self.cset[cur] = self.cset[cur] + csets[tmpsets[i + 1]]
+                        self.cset[midx] = self.cset[midx] + char
                     except KeyError:
-                        self.cset[cur] = csets[tmpsets[i + 1]]
-            elif tmpsets[i - 1] != "%":
-                try:
-                    self.cset[cur] = self.cset[cur] + tmpsets[i]
-                except KeyError:
-                    self.cset[cur] = tmpsets[i]
+                        self.cset[midx] = char
         for key in self.cset.keys():
             self.cset[key] = "".join(sorted(set(self.cset[key])))
-        if cnt > 0:
-            logging.warning("input contains uneven number of brackets")
-            self.wcount += 1
 
     def save_wordlist(self, outfile=None, max_buf=256):
         """
