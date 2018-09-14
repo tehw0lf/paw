@@ -124,20 +124,26 @@ class Paw:
         """
         pattern = list()
         # Get pattern and charset for each string position
-        for i in range(len(instr)):
-            pattern.append("%" + self.cset_lookup(instr[i]))
+        for index, _ in enumerate(instr):
+            pattern.append("%" + self.cset_lookup(instr[index]))
             try:
-                self.cset[i] = "".join(set(self.cset[i] + instr[i]))
+                self.cset[index] = "".join(
+                    set(self.cset[index] + instr[index])
+                )
             except KeyError:
-                self.cset[i] = instr[i]
+                self.cset[index] = instr[index]
         # Filter duplicates from pattern and sort it
         pattern = ["".join(sorted(set(i))) for i in pattern]
 
         # Update length based dict with new pattern
         try:
             self.patterns[len(instr)] = [
-                "".join(sorted(set(self.patterns[len(instr)][i] + pattern[i])))
-                for i in range(len(instr))
+                "".join(
+                    sorted(
+                        set(self.patterns[len(instr)][index] + pattern[index])
+                    )
+                )
+                for index, _ in enumerate(instr)
             ]
         except KeyError:
             self.patterns[len(instr)] = pattern
@@ -189,8 +195,8 @@ class Paw:
                     if len(buffer) == max_buf:
                         wl.write("\n".join(buffer) + "\n")
                         buffer = []
-                else:
-                    wl.write("\n".join(buffer))
+                wl.write("\n".join(buffer))
+
         except (OSError, TypeError):  # stdout
             for word in self.gen_wordlist(self.cset):
                 print(word)
