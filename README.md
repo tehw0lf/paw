@@ -1,5 +1,4 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/191e885ae61f45119ff53343b7461729)](https://app.codacy.com/app/tehw0lf/paw?utm_source=github.com&utm_medium=referral&utm_content=tehw0lf/paw&utm_campaign=Badge_Grade_Dashboard)
-
 [![Build Status](https://travis-ci.com/tehw0lf/paw.svg?branch=master)](https://travis-ci.com/tehw0lf/paw) [![codecov](https://codecov.io/gh/tehw0lf/paw/branch/master/graph/badge.svg)](https://codecov.io/gh/tehw0lf/paw)
 
 ![paw.py -h](/res/help.png)
