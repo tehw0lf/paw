@@ -154,7 +154,7 @@ class Paw:
         ([] represents a string position in the output)
         """
         tmpsets = self.gensets
-        matches = re.findall("\[(.*?\]?)\]", tmpsets)
+        matches = re.findall(r"\[(.*?\]?)\]", tmpsets)
         for midx, match in enumerate(matches):
             if match == "":
                 logging.error("empty character set detected, aborting")
