@@ -5,8 +5,8 @@ from .static import csets
 
 def parse_cmdline():
     """
-        Parses input arguments and returns parser
-        """
+    Parses input arguments and returns parser
+    """
     parser = argparse.ArgumentParser(
         description=""" paw - patterns and wordlists in python
                         \n standard charsets:\n %%d: {d}\n %%u: {u}
@@ -43,6 +43,16 @@ def parse_cmdline():
                 charsets for each position
                 ([foo][bar][baz] or [%%d%%l][%%l][%%d%%u])
                 or [fo%%d][b%%lr][%%uaz]"""
+        ),
+    )
+    parser.add_argument(
+        "-w",
+        action="store",
+        dest="combinewords",
+        default=None,
+        help=(
+            """ Generate wordlist by combining all input words with themselves
+                (word1,word2,word3)"""
         ),
     )
     parser.add_argument(
@@ -89,7 +99,7 @@ def parse_cmdline():
 
 def main():
     parser, args = parse_cmdline()
-    paw_cli = paw.Paw(args.gensets, args.hcat, args.infile)
+    paw_cli = paw.Paw(args.gensets, args.combinewords, args.hcat, args.infile)
     if args.custsets and args.gensets:
         parser.print_help()
         print("\nerror: -c, -g, and -p can only be used alone.")
@@ -136,6 +146,10 @@ def main():
         else:
             parser.print_help()
             print("\nerror: no input file specified.")
+
+    if args.combinewords:
+        paw_cli.parse_words()
+        paw_cli.save_wordlist(args.outfile, args.max_buf)
 
     if paw_cli.wcount > 1:
         print("done with %d warnings" % paw_cli.wcount)

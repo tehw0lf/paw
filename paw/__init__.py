@@ -15,15 +15,20 @@ class Paw:
     generates patterns and wordlists based on preset or custom charsets
     """
 
-    def __init__(self, gensets=None, hcat=False, infile=None, algo=0):
+    def __init__(
+        self, gensets=None, combinewords=None, hcat=False, infile=None, algo=0
+    ):
         if algo == 0:
             self.gen_wordlist = wlgen.gen_wordlist_iter
         elif algo == 1:
             self.gen_wordlist = wlgen.gen_wordlist
         elif algo == 2:
             self.gen_wordlist = wlgen.gen_words
+        self.combine_words = wlgen.combine_words
         self.catstrs = {}
         self.cset = {}
+        self.combinewords = combinewords
+        self.words = []
         self.patterns = {}
         self.wcount = 0
         self.gensets = gensets
@@ -177,26 +182,58 @@ class Paw:
         for key in self.cset.keys():
             self.cset[key] = "".join(sorted(set(self.cset[key])))
 
+    def parse_words(self):
+        """
+        Parses words to combine in the form of word1,word2,word3,...,wordn
+        """
+        tmpwords = self.combinewords.split(",")
+        self.words = sorted(set(tmpwords))
+
     def save_wordlist(self, outfile=None, max_buf=256):
         """
         Write wordlist to file
         """
-        try:
-            buffer = []
-            with open(outfile, "w", encoding="utf-8") as wl:
-                print(
-                    "generating %d lines."
-                    % functools.reduce(
-                        operator.mul, [len(i) for i in self.cset.values()], 1
+        if len(self.cset) > 0:
+            try:
+                buffer = []
+                with open(outfile, "w", encoding="utf-8") as wl:
+                    print(
+                        "generating %d lines."
+                        % functools.reduce(
+                            operator.mul,
+                            [len(i) for i in self.cset.values()],
+                            1,
+                        )
                     )
-                )
-                for word in self.gen_wordlist(self.cset):
-                    buffer.append(word)
-                    if len(buffer) == max_buf:
-                        wl.write("\n".join(buffer) + "\n")
-                        buffer = []
-                wl.write("\n".join(buffer))
+                    for word in self.gen_wordlist(self.cset):
+                        buffer.append(word)
+                        if len(buffer) == max_buf:
+                            wl.write("\n".join(buffer) + "\n")
+                            buffer = []
+                    wl.write("\n".join(buffer))
 
-        except (OSError, TypeError):  # stdout
-            for word in self.gen_wordlist(self.cset):
-                print(word)
+            except (OSError, TypeError):  # stdout
+                for word in self.gen_wordlist(self.cset):
+                    print(word)
+        elif len(self.words) > 0:
+            try:
+                buffer = []
+                with open(outfile, "w", encoding="utf-8") as wl:
+                    print(
+                        "generating %d lines."
+                        % functools.reduce(
+                            operator.mul,
+                            [i ** 2 for i in self.words],
+                            1,
+                        )
+                    )
+                    for word in self.combine_words(self.words):
+                        buffer.append(word)
+                        if len(buffer) == max_buf:
+                            wl.write("\n".join(buffer) + "\n")
+                            buffer = []
+                    wl.write("\n".join(buffer))
+
+            except (OSError, TypeError):  # stdout
+                for word in self.combine_words(self.words):
+                    print(word)
