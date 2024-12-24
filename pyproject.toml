@@ -1,0 +1,21 @@
+[project]
+name="paw"
+version="1.2"
+description="paw - patterns and wordlists in python"
+readme = "README.md"
+authors = [
+    { name = "tehw0lf", email = "tehwolf@protonmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "mock>=5.1.0",
+    "ruff>=0.8.4",
+    "setuptools>=75.6.0",
+    "wlgen>=1.2",
+]
+[project.scripts]
+paw = "paw:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
