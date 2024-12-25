@@ -17,7 +17,6 @@ source = { editable = "." }
 dependencies = [
     { name = "mock" },
     { name = "ruff" },
-    { name = "setuptools" },
     { name = "wlgen" },
 ]
 
@@ -25,7 +24,6 @@ dependencies = [
 requires-dist = [
     { name = "mock", specifier = ">=5.1.0" },
     { name = "ruff", specifier = ">=0.8.4" },
-    { name = "setuptools", specifier = ">=75.6.0" },
     { name = "wlgen", specifier = ">=1.2" },
 ]
 
