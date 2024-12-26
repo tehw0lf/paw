@@ -30,6 +30,16 @@ jobs:
       - name: Build
         run: uv build
       - uses: "marvinpinto/action-automatic-releases@latest"
+        if: ${{ github.event_name == 'push' }}
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Release"
+          files: |
+            dist/paw-*
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        if: ${{ github.event_name != 'push' }}
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
