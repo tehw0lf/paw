@@ -1,4 +1,4 @@
-name: Build
+name: build pipeline
 
 on:
   push:
@@ -8,41 +8,18 @@ on:
 
 jobs:
   build:
-    name: python
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-      - name: "Set up Python"
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: "pyproject.toml"
-      - name: Install the project
-        run: uv sync --all-extras --dev
-      - name: Run ruff
-        run: uv run ruff check
-      - name: Run tests
-        run: uv run python -m unittest discover
-      - name: Build
-        run: uv build
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        if: ${{ github.event_name == 'push' }}
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: false
-          title: "Release"
-          files: |
-            dist/paw-*
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        if: ${{ github.event_name != 'push' }}
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          title: "Release"
-          files: |
-            dist/paw-*
+    name: external workflow
+    uses: tehw0lf/workflows/.github/workflows/build-test-publish.yml@main
+    permissions:
+      actions: write
+      contents: write
+      packages: write
+    with:
+      tool: "uv"
+      install: "sync --all-extras --dev"
+      lint: "run ruff check"
+      test: "run python -m unittest discover"
+      build_branch: "build"
+      build_main: "build"
+      event_name: ${{ github.event_name }}
+      library_path: "dist/paw-*"
