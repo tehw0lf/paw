@@ -22,4 +22,4 @@ jobs:
       build_branch: "build"
       build_main: "build"
       event_name: ${{ github.event_name }}
-      library_path: "dist/paw-*"
+      artifact_path: "dist"
