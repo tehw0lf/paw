@@ -23,3 +23,4 @@ jobs:
       build_main: "build"
       event_name: ${{ github.event_name }}
       artifact_path: "dist"
+      publish_github_release: "true"
