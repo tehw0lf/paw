@@ -56,11 +56,12 @@ def parse_cmdline():
         "-a",
         action="store",
         dest="algo",
-        default=0,
+        default='auto',
         help=""" Algorithm to use for wordlist generation.
-                0: itertools.product (stable, default) | 1: build wordlist
-                in memory (do not use this for large lists) | 2: generate
-                wordlist on the fly (slowest)""",
+                auto: smart selection based on problem size (default)
+                0: itertools.product (memory-efficient, optimal throughput)
+                1: build wordlist in memory (fastest for small lists)
+                2: generate wordlist on the fly (slowest, most memory-efficient)""",
     )
     parser.add_argument(
         "-H",

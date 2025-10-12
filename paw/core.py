@@ -15,13 +15,26 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 
 class Paw:
-    def __init__(self, gensets=None, hcat=False, infile=None, algo=0):
-        if algo == 0:
+    def __init__(self, gensets=None, hcat=False, infile=None, algo='auto'):
+        # Map algorithm parameter to wlgen method
+        # Support both 'auto' string and legacy numeric values (0, 1, 2)
+        if algo == 'auto':
+            self.method = 'auto'
+            self.gen_wordlist = None  # Will use wlgen.generate_wordlist
+        elif algo == 0 or algo == '0':
+            self.method = 'iter'
             self.gen_wordlist = wlgen.gen_wordlist_iter
-        elif algo == 1:
+        elif algo == 1 or algo == '1':
+            self.method = 'list'
             self.gen_wordlist = wlgen.gen_wordlist
-        elif algo == 2:
+        elif algo == 2 or algo == '2':
+            self.method = 'words'
             self.gen_wordlist = wlgen.gen_words
+        else:
+            # Default to auto for any other value
+            self.method = 'auto'
+            self.gen_wordlist = None
+
         self.catstrs = {}
         self.cset = {}
         self.patterns = {}
@@ -71,4 +84,10 @@ class Paw:
         self.cset = parse_charsets(self.gensets, self.cset)
 
     def save_wordlist(self, outfile=None, max_buf=256):
-        save_to_file(self.cset, self.gen_wordlist, outfile, max_buf)
+        # Use smart algorithm selection if method is 'auto'
+        if self.method == 'auto':
+            def gen_func(charset):
+                return wlgen.generate_wordlist(charset, method='auto')
+        else:
+            gen_func = self.gen_wordlist
+        save_to_file(self.cset, gen_func, outfile, max_buf)
