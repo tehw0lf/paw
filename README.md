@@ -39,11 +39,16 @@ In order to use individual components from the library, simply `import paw`.
 
 - `-a`: algorithm to use for wordlist generation
 
-  > There are three options:  
-  > `0 (stable, default)`: This uses `itertools.product` to generate the wordlist, which is memory efficient and provides a decent speed.  
-  > `1`: `gen_wordlist` builds the whole wordlist in memory before writing it to a file. While the write process itself is faster than option `0`, this does
-  > not work for large lists as paw will run into memory errors.  
-  > `2`: `gen_words` generates the wordlist word for word, which is memory efficient, but not as fast as `itertools.product`.
+  > By default, paw uses smart algorithm selection (`auto`) that automatically chooses the optimal generation method based on wordlist size:
+  > - Small wordlists (<1K combinations): Fast in-memory generation
+  > - Medium wordlists (1K-100K): In-memory generation for speed and convenience
+  > - Large wordlists (>100K): Memory-efficient iterator-based generation
+  >
+  > You can manually override the algorithm selection:
+  > `auto (default)`: Smart selection based on problem size
+  > `0`: Force `itertools.product` (memory-efficient, optimal throughput)
+  > `1`: Force `gen_wordlist` (fastest for small lists, builds in memory)
+  > `2`: Force `gen_words` (slowest, most memory-efficient word-by-word generation)
 
 - `-H`: generate [hashcat](https://github.com/hashcat/hashcat) command
 
