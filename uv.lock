@@ -47,7 +47,7 @@ wheels = [
 
 [[package]]
 name = "paw"
-version = "2.0.0"
+version = "2.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "wlgen" },
@@ -64,7 +64,7 @@ lint = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "wlgen", specifier = ">=2.0.0" }]
+requires-dist = [{ name = "wlgen", specifier = ">=2.0.1" }]
 
 [package.metadata.requires-dev]
 dev = [{ name = "mock" }]
@@ -168,9 +168,9 @@ wheels = [
 
 [[package]]
 name = "wlgen"
-version = "2.0.0"
+version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/21/6f/1607cdc94968195b37bff49793f6ba85391f3b7b2e809244ece7dc4d3495/wlgen-2.0.0.tar.gz", hash = "sha256:1f029fb9ac10d744fa08e8c832236268d86505398ba5af643b6771740f0714e1", size = 21018, upload-time = "2025-10-11T23:06:47.568Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4c/bf/cc8f91b007a296b7e7705844dcaa87407418fb8a638affd7fecf83924b04/wlgen-2.0.1.tar.gz", hash = "sha256:a631b03989b31fea4e95a9150bf4fa3a744f8e3fa9f80eb3cf96fddfb4551b5f", size = 21064, upload-time = "2025-12-13T22:35:31.842Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/34/3e/1ee1ba6d0c681005f8b80bd7f7f00145f05e2afaaf1c6ac788c04564373b/wlgen-2.0.0-py3-none-any.whl", hash = "sha256:7952fe5a864fe9098f5444d86f926ffe2cd103b6d61559344d61e129cd525694", size = 13783, upload-time = "2025-10-11T23:06:46.487Z" },
+    { url = "https://files.pythonhosted.org/packages/06/e9/b69d474df88874a28a78a829f1d070741e4ffff8ea32df5043f031069ea4/wlgen-2.0.1-py3-none-any.whl", hash = "sha256:befc84fa4a4893c656de02e6146bb575675899ad01e2c78a173478ce0a8e54a3", size = 13786, upload-time = "2025-12-13T22:35:30.739Z" },
 ]
