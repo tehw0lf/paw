@@ -8,30 +8,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: external workflow
+    uses: tehw0lf/workflows/.github/workflows/build-test-publish.yml@main
     permissions:
       id-token: write
       actions: write
       contents: write
       packages: write
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-          cache-dependency-glob: "./uv.lock"
-      - uses: actions/setup-python@v6
-        with:
-          python-version-file: "./pyproject.toml"
-      - name: install dependencies with UV
-        run: uv sync --all-extras --dev --group lint
-      - name: lint with UV
-        run: uv run ruff check
-      - name: test with UV
-        run: uv run python -m unittest discover
-      - name: Build with UV
-        run: uv build
-      - name: publish with UV
-        run: uv publish
+    with:
+      tool: "uv"
+      install: "sync --all-extras --dev --group lint"
+      lint: "run ruff check"
+      test: "run python -m unittest discover"
+      build_branch: "build"
+      build_main: "build"
+      event_name: ${{ github.event_name }}
+      artifact_path: "dist"
+      publish_github_release: "true"
+      publish_python_libraries: "false"
