@@ -15,6 +15,7 @@ jobs:
       actions: write
       contents: write
       packages: write
+      security-events: write
     with:
       tool: "uv"
       install: "sync --all-extras --dev --group lint"
