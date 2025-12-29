@@ -13,6 +13,7 @@ jobs:
     permissions:
       id-token: write
       actions: write
+      attestations: write
       contents: write
       packages: write
       security-events: write
