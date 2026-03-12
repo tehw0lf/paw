@@ -24,7 +24,6 @@ jobs:
       test: "run python -m unittest discover"
       build_branch: "build"
       build_main: "build"
-      event_name: ${{ github.event_name }}
       artifact_path: "dist"
       publish_github_release: "true"
       publish_python_libraries: "false"
