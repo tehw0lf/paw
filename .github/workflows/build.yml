@@ -26,4 +26,3 @@ jobs:
       build_main: "build"
       artifact_path: "dist"
       publish_github_release: "true"
-      publish_python_libraries: "false"
