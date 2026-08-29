@@ -26,4 +26,4 @@ jobs:
       build_branch: "build"
       build_main: "build"
       artifact_path: "dist"
-      publish_github_release: "true"
+      publish_github_release: true
