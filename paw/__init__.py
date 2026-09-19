@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-from .core import Paw
 from .command_line import main
+from .core import Paw
 
 __all__ = ["Paw", "main"]

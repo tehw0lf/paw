@@ -4,9 +4,11 @@ import sys
 
 from .static import csets
 
+logger = logging.getLogger(__name__)
+
 
 def cset_lookup(instr):
-    p = str()
+    p = ""
     if instr in csets["d"]:
         p = "d"
     elif instr in csets["h"]:
@@ -21,7 +23,7 @@ def cset_lookup(instr):
         p = "s"
     if ord(instr) == 0 or ord(instr) == 255:
         p = "b"
-        logging.warning("bad char detected in input")
+        logger.warning("bad char detected in input")
         return p, True
     return p, False
 
@@ -50,27 +52,27 @@ def generate_pattern(instr, patterns, charset):
 
 def generate_hcat_command(patterns, catstrs, wcount):
     catstr = "-a 3 "
-    print("")
+    print()
     for k, i in patterns.items():
         pattern = ""
         hexu = ""
         hexl = ""
         if len("".join(i)) > 0:
             if "%dh" in "".join(sorted(i)):
-                hexu = "-1 %s%s " % (csets["d"], csets["h"])
+                hexu = f"-1 {csets['d']}{csets['h']} "
             elif "%h" in "".join(sorted(i)):
-                hexu = "-1 %s " % csets["h"]
+                hexu = f"-1 {csets['h']} "
             if "%di" in "".join(sorted(i)):
-                hexl = "-2 %s%s " % (csets["d"], csets["i"])
+                hexl = f"-2 {csets['d']}{csets['i']} "
             elif "%i" in "".join(sorted(i)):
-                hexl = "-2 %s " % csets["i"]
+                hexl = f"-2 {csets['i']} "
             for j in i:
                 pattern += "?" + j.replace("%", "").replace("dh", "h").replace(
                     "di", "i"
                 ).replace("h", "1").replace("i", "2")
             catstrs[k] = catstr + hexu + hexl + pattern.replace("??", "?")
         else:
-            logging.warning("pattern %d is empty" % k)
+            logger.warning("pattern %d is empty", k)
             wcount += 1
     return catstrs, wcount
 
@@ -79,12 +81,12 @@ def parse_charsets(infile, charset):
     matches = re.findall(r"\[(.*?\]?)\]", infile)
     for midx, match in enumerate(matches):
         if match == "":
-            logging.error("empty character set detected, aborting")
+            logger.error("empty character set detected, aborting")
             sys.exit()
         else:
             for cidx, char in enumerate(match):
                 if char == "%":
-                    if match[cidx + 1] in csets.keys():
+                    if match[cidx + 1] in csets:
                         try:
                             charset[midx] = (
                                 charset[midx] + csets[match[cidx + 1]]
@@ -97,6 +99,6 @@ def parse_charsets(infile, charset):
                     except KeyError:
                         charset[midx] = char
 
-    for key in charset.keys():
+    for key in charset:
         charset[key] = "".join(sorted(set(charset[key])))
     return charset

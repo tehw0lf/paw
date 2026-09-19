@@ -1,7 +1,8 @@
-from .base import paw_test
 import filecmp
-import mock
 import sys
+from unittest import mock
+
+from .base import paw_test
 
 
 class save_wordlist_test(paw_test):
