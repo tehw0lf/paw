@@ -1,6 +1,8 @@
 import unittest
-import paw
+
 import wlgen
+
+import paw
 
 
 class paw_test(unittest.TestCase):
@@ -13,5 +15,5 @@ class paw_test(unittest.TestCase):
         self.no_duplicates = [["A", "A"], ["1", "1"]]
         self.badchar = chr(0)
         self.tfilepath = "paw/tests/test_files/tmp"
-        self.tfile = open(self.tfilepath, "w")
-        self.tfile.close()
+        with open(self.tfilepath, "w") as self.tfile:
+            pass

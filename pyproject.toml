@@ -1,6 +1,6 @@
 [project]
 name="paw"
-version="2.0.3"
+version="2.0.4"
 description="paw - patterns and wordlists in python"
 readme = "README.md"
 authors = [
@@ -15,13 +15,13 @@ dev = [
   "mock"
 ]
 lint = [
-  "ruff"
+  "ruff>=0.16"
 ]
 [project.scripts]
 paw = "paw:main"
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 
 [build-system]
 requires = ["hatchling"]

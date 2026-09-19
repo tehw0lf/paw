@@ -1,5 +1,8 @@
 import argparse
+import sys
+
 import paw
+
 from .static import csets
 
 
@@ -94,7 +97,7 @@ def main():
     if args.custsets and args.gensets:
         parser.print_help()
         print("\nerror: -c, -g, and -p can only be used alone.")
-        exit()
+        sys.exit(2)
 
     if args.hcat and args.gensets:
         parser.print_help()
@@ -102,14 +105,14 @@ def main():
             """\nerror: -H has to be used in combination
         with either\t-c, or -p."""
         )
-        exit()
+        sys.exit(2)
 
     if args.custsets:
         if args.infile:
             if args.pattern:
                 parser.print_help()
                 print("\nerror: -c, -g, and -p can only be used alone.")
-                exit()
+                sys.exit(2)
             else:
                 paw_cli.gen_custom_charset()
                 paw_cli.save_wordlist(args.outfile, args.max_buf)
@@ -124,7 +127,7 @@ def main():
             print(args.gensets)
             parser.print_help()
             print("\nerror: -c, -g, and -p can only be used alone.")
-            exit()
+            sys.exit(2)
         else:
             paw_cli.parse_cset()
             paw_cli.save_wordlist(args.outfile, args.max_buf)
@@ -139,6 +142,6 @@ def main():
             print("\nerror: no input file specified.")
 
     if paw_cli.wcount > 1:
-        print("done with %d warnings" % paw_cli.wcount)
+        print(f"done with {paw_cli.wcount} warnings")
     elif paw_cli.wcount > 0:
-        print("done with %d warning" % paw_cli.wcount)
+        print(f"done with {paw_cli.wcount} warning")

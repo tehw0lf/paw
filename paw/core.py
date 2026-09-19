@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import logging
 
 import wlgen
@@ -69,9 +68,9 @@ class Paw:
                 self.patterns, self.cset = generate_pattern(
                     line.strip("\n"), self.patterns, self.cset
                 )
-        print("")
+        print()
         for key, value in self.patterns.items():
-            print("length: %d\t pattern: %s" % (key, "".join(value)))
+            print(f"length: {key}\t pattern: {''.join(value)}")
 
     def gen_hcat_cmd(self):
         self.catstrs, self.wcount = generate_hcat_command(
