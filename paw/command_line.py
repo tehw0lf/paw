@@ -97,7 +97,7 @@ def main():
     if args.custsets and args.gensets:
         parser.print_help()
         print("\nerror: -c, -g, and -p can only be used alone.")
-        sys.exit()
+        sys.exit(2)
 
     if args.hcat and args.gensets:
         parser.print_help()
@@ -105,14 +105,14 @@ def main():
             """\nerror: -H has to be used in combination
         with either\t-c, or -p."""
         )
-        sys.exit()
+        sys.exit(2)
 
     if args.custsets:
         if args.infile:
             if args.pattern:
                 parser.print_help()
                 print("\nerror: -c, -g, and -p can only be used alone.")
-                sys.exit()
+                sys.exit(2)
             else:
                 paw_cli.gen_custom_charset()
                 paw_cli.save_wordlist(args.outfile, args.max_buf)
@@ -127,7 +127,7 @@ def main():
             print(args.gensets)
             parser.print_help()
             print("\nerror: -c, -g, and -p can only be used alone.")
-            sys.exit()
+            sys.exit(2)
         else:
             paw_cli.parse_cset()
             paw_cli.save_wordlist(args.outfile, args.max_buf)
