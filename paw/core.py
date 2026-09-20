@@ -50,17 +50,31 @@ class Paw:
         return p
 
     def gen_custom_charset(self):
+        """
+        Collect one pattern per input line: the union of the character classes
+        every character on that line belongs to.
+
+        Classes are collected as whole tokens, because two of them (`%h` and
+        `%i`) are more than one character long and mixing at character level
+        would tear them apart.
+
+        The previous version stored the first class as a plain string and every
+        later one as a set, so from the third distinct character on it evaluated
+        `set(...) + str` and raised TypeError. `paw -c` was therefore unusable
+        for any line holding three different characters.
+        """
         with open(self.infile, "r", encoding="utf-8") as f:
             for i, line in enumerate(f):
                 self.cset[i] = list(set(line.strip("\n")))
+                classes = set()
                 for j in self.cset[i]:
                     p, is_bad = cset_lookup(j)
                     if is_bad:
                         self.wcount += 1
-                    try:
-                        self.patterns[i] = set(self.patterns[i] + p)
-                    except KeyError:
-                        self.patterns[i] = p
+                    if p:
+                        classes.add(p)
+                # Sorted so the same input always yields the same pattern.
+                self.patterns[i] = "".join(sorted(classes))
 
     def from_passwords(self):
         with open(self.infile, "r", encoding="utf-8") as f:
