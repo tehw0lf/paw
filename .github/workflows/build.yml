@@ -16,6 +16,7 @@ jobs:
       attestations: write
       contents: write
       packages: write
+      issues: write
       security-events: write
       pull-requests: write
     with:
