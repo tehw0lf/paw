@@ -1,6 +1,6 @@
 [project]
 name="paw"
-version="2.0.5"
+version="2.0.6"
 description="paw - patterns and wordlists in python"
 readme = "README.md"
 authors = [
